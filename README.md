@@ -8,14 +8,6 @@ FastFrames is a lightweight and efficient framework designed for high-performanc
 - **Modular Design**: Easily extendable and customizable.
 - **User-Friendly**: Simple APIs for quick integration.
 
-## Documentation
-
-Comprehensive documentation is available in the `docs/` directory. It includes detailed guides and examples to help you get started.
-
-## tWZ Analysis Config
-
-The `configs/` directory contains configuration files specifically tailored for tWZ analysis. These files can be customized to suit your specific requirements.
-
 ## Getting Started
 
 To start using the package, source the `setup.sh` script:
@@ -54,15 +46,3 @@ source runFastFramesTest.sh
 ```
 
 **Note:** Before running the test script, ensure that the file paths inside `runFastFramesTest.sh` are updated to reflect their correct locations on your machine.
-
-## Support
-
-For support, please open an issue in the GitHub repository or contact the maintainers directly.
-
-## Contributing
-
-Contributions are welcome! Please fork the repository and submit a pull request.
-
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.

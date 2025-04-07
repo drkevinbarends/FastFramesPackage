@@ -1,0 +1,344 @@
+##########################################################################################################################################
+#### This config should not be used for any real analysis, it is just for testing of all implemented features in CI tests !!!  ###########
+##########################################################################################################################################
+
+general:
+  debug_level: WARNING
+  input_filelist_path: "test/input/filelist.txt"
+  input_sumweights_path: "test/input/sum_of_weights.txt"
+  output_path_histograms: ""
+  output_path_ntuples: ""
+  exclude_systematics: ["GEN_*."]
+  default_sumweights: "NOSYS"
+  default_event_weights: "weight_mc_NOSYS * weight_beamspot * weight_pileup_NOSYS * weight_jvt_effSF_NOSYS * weight_btagSF_DL1dv01_FixedCutBEff_85_NOSYS * globalTriggerEffSF_NOSYS * weight_leptonSF_tight_NOSYS"
+  default_reco_tree_name: "reco"
+  xsection_files: ["test/data/PMGxsecDB_mc16.txt","test/data/PMGxsecDB_mc23.txt"]
+#  xsection_files: ["/cvmfs/atlas.cern.ch/repo/sw/database/GroupData/dev/PMGTools/PMGxsecDB_mc16.txt","/cvmfs/atlas.cern.ch/repo/sw/database/GroupData/dev/PMGTools/PMGxsecDB_mc23.txt"]
+  create_tlorentz_vectors_for: ["jet"]
+  #reco_to_truth_pairing_indices: ["eventNumber", "runNumber"]
+#  custom_frame_name: "my_custom_frame_name.so"
+  #automatic_systematics: True
+  nominal_only: False
+  #config_define_after_custom_class: True
+  cap_acceptance_selection: False
+  number_of_cpus: 4
+  max_event: 1000
+  list_of_systematics_name: "CustomListOfSystematics"
+  ntuple_compression_level: 0
+  ntuple_auto_flush: 3
+  split_processing_per_unique_samples: True
+  convert_vector_to_rvec: True
+  luminosity:
+    mc20a: 123456
+    #mc20d: 111111 #default one from C++ part
+    mc20e: 654321
+    mc23a: 456677
+    mc23c: 545676
+  define_custom_columns:
+    - name: "HT_2_jets"
+      definition: "jet_pt_NOSYS[0] + jet_pt_NOSYS[1]"
+  define_custom_columns_truth:
+    - name: "HT_ttbar"
+      definition: "truth_top_pt + truth_tbar_pt"
+      truth_tree: "truth"
+  custom_options: # this block can be used to store settings for a derived class. It will be stored in ConfigSettings
+    btagging_WP: 85
+    btagging_algorithm: "DL1"
+
+simple_onnx_inference:
+  - name: "MVA_model_1"
+    model_paths: [
+      "/path/to/the/model_fold_0.onnx",
+      "/path/to/the/model_fold_1.onnx"
+    ]
+    inputs:
+      "args_0": ["only_el_pt_NOSYS", "only_el_eta_NOSYS", "met_met_NOSYS", "met_phi_NOSYS"]
+    outputs:
+      "softmax_output": ["signal_score_NOSYS", "", "bkg2_score_NOSYS"]
+
+cutflows:
+  - name: "selection_el"
+    samples: ["Data", "ttbar_FS"] # optional, default is all samples
+    selections:
+      - selection: "el_pt_NOSYS[0] > 30000"
+        title: "el_pt_30"
+      - selection: "el_pt_NOSYS[0] > 40000"
+        title: "el_pt_40"
+  - name: "selection_mu"
+    samples: ["ttbar_FS"] # optional, default is all samples
+    selections:
+      - selection: "mu_pt_NOSYS[0] > 70000"
+        title: "mu_pt_70"
+      - selection: "mu_pt_NOSYS[0] > 90000"
+        title: "mu_pt_90"
+
+ntuples:
+  samples: ["ttbar_FS", "Zjets_b"] # optional, if not provided, use all samples
+  #exclude_samples: []
+  #selection: "el_pt_NOSYS[4] > 30000" # optional
+  branches: ["my_first_branch", "my_second_branch"] # optional, if not provided, use all branches
+  exclude_branches: ["my_first_excluded_branch", "my_second_excluded_branch"] # optional, if not provided, use all branches
+  regions: [ "Electron", "Muon"] # optional
+  copy_trees: ["treeName1", "treeName2"] # optional, default is empty list
+
+regions:
+  - name: "Electron"
+    selection: "el_pt_NOSYS[0] > 30000"
+    variables:
+      - name: "jet_pt"
+        #title : "histo title;X axis title;Y axis title"
+        definition: "jet_pt_NOSYS"
+        type: "float"
+        binning:
+          min: 0
+          max: 300000
+          number_of_bins: 10
+      - name: "met_met"
+        title : "histo title;X axis title;Y axis title"
+        definition: "met_met_NOSYS"
+        type: "float"
+        binning:
+          #min: 0
+          #max: 250000
+          #number_of_bins: 100
+          bin_edges: [0,20000,60000,80000,140000,250000]
+      - name: "met_phi"
+        title : "histo title;X axis title;Y axis title"
+        definition: "met_phi_NOSYS"
+        type: "float"
+        binning:
+          min: -3.2
+          max: 3.2
+          number_of_bins: 16
+    histograms_3d:
+      - x: "met_met"
+        y: "met_phi"
+        z: "jet_pt"
+
+  - name: "Muon"
+    selection: "mu_pt_NOSYS[0] > 30000"
+    variables:
+      - name: "jet_pt"
+        #title : "histo title;X axis title;Y axis title"
+        definition: "jet_pt_NOSYS"
+        type: "float"
+        is_nominal_only: True
+        binning:
+          min: 0
+          max: 300000
+          number_of_bins: 10
+      - name: "met_met"
+        title : "histo title;X axis title;Y axis title"
+        definition: "met_met_NOSYS"
+        type: "float"
+        binning:
+          #min: 0
+          #max: 250000
+          #number_of_bins: 100
+          bin_edges: [0,20000,60000,80000,140000,250000]
+      - name: "met_phi"
+        title : "histo title;X axis title;Y axis title"
+        definition: "met_phi_NOSYS"
+        type: "float"
+        binning:
+          min: -3.2
+          max: 3.2
+          number_of_bins: 16
+      - name: "jet#N_pt"
+        title : ";Transverse momentum of jet ##N;Y axis title"
+        definition: "jet_pt_index_#N_NOSYS"
+        type: "float"
+        numbering_sequence:
+          - replacement_string: "#N"
+            min: 1
+            max: 4
+        binning:
+          min: 0
+          max: 300000
+          number_of_bins: 10
+      - name: "particle_jet#N_pt"
+        title : ";Transverse momentum of particle-level jet ##N;Y axis title"
+        definition: "particle_jet_pt_index_#N_NOSYS"
+        type: "float"
+        numbering_sequence:
+          - replacement_string: "#N"
+            min: 1
+            max: 4
+        binning:
+          min: 0
+          max: 300000
+          number_of_bins: 10
+      - name: "top_pt_mass_#MASS"
+        title : ";Transverse momentum of top-quark, m_top = #MASS GeV;Y axis title"
+        definition: "pt_top_mass_#MASS_NOSYS"
+        type: "float"
+        numbering_sequence:
+          - replacement_string: "#MASS"
+            values: ["170", "172.5", "175.0"]
+        binning:
+          min: 0
+          max: 300000
+          number_of_bins: 10
+    histograms_2d:
+      - x: "met_met"
+        y: "met_phi"
+      - x: "particle_jet#INDEX_PARTICLE_pt"
+        y: "jet#INDEX_RECO_pt"
+        numbering_sequence:
+          - replacement_string: "#INDEX_RECO"
+            min: 1
+            max: 4
+          - replacement_string: "#INDEX_PARTICLE"
+            min: 1
+            max: 3
+samples:
+  - name: "ttbar_FS"
+    dsids: [410470]
+    campaigns: ["mc20e"]
+    simulation_type: "fullsim"
+    weight_suffix: "my_suffix_weight_for_ttbar" # this is an additional weight to be applied (multiplication) to the sample
+    #event_weights: "something" # if specified, it will be used instead of the "default_event_weights" from the general block
+    #regions: ["Electron", "Muon"] # if not provided, use all regions?
+    automatic_systematics: True
+    truth:
+      - name: particle
+        #pair_reco_and_truth_trees: False
+        produce_unfolding: True
+        truth_tree_name: "truth"
+        branches: ["particle_jet_pt", "particle_jet_eta"]
+        excluded_branches: ["particle_jet_phi"]
+        selection: "particle_jet_pt[0] > 10000" #optional
+        event_weight: "mc_gen"
+        match_variables:
+          - reco: "jet#N_pt"
+            truth: "truth_jet1_pt"
+            numbering_sequence:
+            - replacement_string: "#N"
+              min: 1
+              max: 4
+          - reco: "jet_pt"
+            truth: "truth_jet_pt"
+        variables:
+          - name: "truth_jet_pt"
+            definition:  "particle_jet_pt"
+            type: "float"
+            binning:
+              min: 0
+              max: 10
+              number_of_bins: 10
+          - name: "truth_jet#N_pt"
+            definition:  "particle_jet#N_pt"
+            type: "float"
+            numbering_sequence:
+            - replacement_string: "#N"
+              min: 1
+              max: 4
+            binning:
+              min: 0
+              max: 10
+              number_of_bins: 10
+          - name: "truth_el_pt"
+            type: "float"
+            definition:  "particle_el_pt"
+            binning:
+              bin_edges: [0,2,5,7,8,10,15]
+
+  - name: "Zjets_light"
+    dsids: [364100,364101]
+    campaigns: ["mc20e"]
+    event_weights: "weight_mc_NOSYS"
+    selection_suffix: "n_bjets_truth == 0 && n_cjets_truth == 0"
+    simulation_type: "fullsim"
+    regions: ["M.*"]
+    reco_to_truth_pairing_indices: ["runNumber", "eventNumber"]
+    exclude_variables: ["jet_pt.*"]
+    define_custom_columns:
+      - name: "HT_3_jets"
+        definition: "jet_pt_NOSYS[0] + jet_pt_NOSYS[1] + jet_pt_NOSYS[2]"
+    exclude_systematics: ["btag_B_eff_*."]
+
+  - name: "Zjets_b"
+    dsids: [364100,364101]
+    campaigns: ["mc20e"]
+    event_weights: "weight_mc_NOSYS"
+    sum_weights: "alternative_sum_weights"
+    selection_suffix: "n_bjets_truth > 0"
+    simulation_type: "fullsim"
+    exclude_regions: ["M.*"]
+
+  - name: "sample_squence_#GT"
+    dsids: [364105]
+    campaigns: ["mc20e"]
+    event_weights: "weight_mc_#GT"
+    selection_suffix: "n_bjets_truth > 0"
+    simulation_type: "fullsim"
+    exclude_regions: ["Muon"]
+    numbering_sequence:
+      - replacement_string: '#GT'
+        values: ["0p5","0p8","1p8","2p0"]
+
+
+  - name: "Wjets_FS"
+    dsids: [700341,700342,700344]
+    nominal_only: True
+    campaigns: ["mc20a","mc20e"]
+    simulation_type: "fullsim"
+    regions: ["Electron"]
+    exclude_variables: ["jet_pt"]
+
+  - name: "fakes"
+    included_samples: ["Wjets_FS", "Zjets_light", "ttbar_FS"]
+    selection_suffix: "n_fakes > 0"
+    nominal_only: True
+
+
+  - name: "Data"
+    simulation_type: "data"
+    campaigns: ["2018"]
+    regions: ["Electron", "Muon"]
+    variables: ["met_met"]
+
+
+
+systematics:
+  - samples: ["ttbar_FS"]
+    campaigns: ["mc20e"]
+    regions: ["Electron"]
+    variation:
+      up: "JET_BJES_Response__1up"
+      #weight_suffix_up: "bootstrap_weight" # additional weight to be applied (multiplication) to the sample
+      down: "JET_BJES_Response__1down"
+
+  - samples: ["ttbar_FS"]
+    campaigns: ["mc20e"]
+    #regions: ["Electron", "Muon"]
+    variation:
+      up: "0p5muF_0p5muR_NNPDF31_NLO_0118"
+      sum_weights_up: "0p5muF_0p5muR_NNPDF31_NLO_0118"
+
+  - variation:
+      up: "btag_B_1__up"
+      down: "btag_B_1__down"
+
+  - exclude_samples: ["Zjets_light"]
+    exclude_regions: ["Muon"]
+    variation:
+      up: "btag_C_1__up"
+      down: "btag_C_1__down"
+
+  - exclude_samples: ["Zjets_light"]
+    exclude_regions: ["Muon"]
+    numbering_sequence:
+      - replacement_string: "#N"
+        min: 1
+        max: 4
+    variation:
+      up: "btag_light_#N__up"
+      down: "btag_light_#N__down"
+
+  - samples: ["Data"]
+    #campaigns: ["mc20e"]
+    #regions: ["Electron", "Muon"]
+    variation:
+      up: "bootstraps1"
+      weight_suffix_up: "bootstrap_weight1"

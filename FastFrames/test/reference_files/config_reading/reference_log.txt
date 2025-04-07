@@ -1,0 +1,1107 @@
+
+General block:
+	inputSumWeightsPath:  test/input/sum_of_weights.txt
+	outputPathHistograms:  
+	outputPathNtuples:  
+	inputFilelistPath:  test/input/filelist.txt
+	numCPU:  4
+	customFrameName:  
+	min_event:  -1
+	max_event:  1000
+	--split_n_jobs:  -1
+	--job_index:  -1
+	xSectionFiles:  ['test/data/PMGxsecDB_mc16.txt', 'test/data/PMGxsecDB_mc23.txt']
+	cap_acceptance_selection: False
+	config_define_after_custom_class: False
+	use_region_subfolders: False
+	list_of_systematics_name: CustomListOfSystematics
+	ntuple_compression_level: 0
+	ntuple_auto_flush: 3
+	split_processing_per_unique_samples: True
+	convert_vector_to_rvec:  True
+	luminosity, mc20a:  123456.0
+	luminosity, mc20d:  44630.6015625
+	create_tlorentz_vectors_for:
+		 jet
+	use_rvec False
+custom_options:
+	 btagging_WP :  85
+	 btagging_algorithm :  DL1
+
+ONNX interfaces:
+	name:  MVA_model_1
+	model_paths: 
+		 /path/to/the/model_fold_0.onnx
+		 /path/to/the/model_fold_1.onnx
+	Input layers: (name, [branches]) 
+		args_0 ['only_el_pt_NOSYS', 'only_el_eta_NOSYS', 'met_met_NOSYS', 'met_phi_NOSYS']
+	Output layers: (name, [branches]) 
+		softmax_output ['signal_score_NOSYS', '', 'bkg2_score_NOSYS']
+
+
+
+Ntuple block:
+	selection:  ((el_pt_NOSYS[0] > 30000) || (mu_pt_NOSYS[0] > 30000))
+	samples: [ ttbar_FS,Zjets_b ]
+	branches: [ my_first_branch,my_second_branch ]
+	excluded_branches: [ my_first_excluded_branch,my_second_excluded_branch ]
+	copy_trees:  ['treeName1', 'treeName2']
+
+
+Regions block:
+
+	name:  Electron
+	selection:  el_pt_NOSYS[0] > 30000
+	variables:
+		name:  jet_pt
+		title:  
+		type:  float
+		definition:  jet_pt_NOSYS
+		is_nominal_only:  False
+		binning:  10 ,  0.0 ,  300000.0
+
+
+		name:  met_met
+		title:  histo title;X axis title;Y axis title
+		type:  float
+		definition:  met_met_NOSYS
+		is_nominal_only:  False
+		binning:  0.000000,20000.000000,60000.000000,80000.000000,140000.000000,250000.000000
+
+
+		name:  met_phi
+		title:  histo title;X axis title;Y axis title
+		type:  float
+		definition:  met_phi_NOSYS
+		is_nominal_only:  False
+		binning:  16 ,  -3.2 ,  3.2
+
+
+	3d combinations:
+		 met_met, met_phi, jet_pt
+
+
+	name:  Muon
+	selection:  mu_pt_NOSYS[0] > 30000
+	variables:
+		name:  jet_pt
+		title:  
+		type:  float
+		definition:  jet_pt_NOSYS
+		is_nominal_only:  True
+		binning:  10 ,  0.0 ,  300000.0
+
+
+		name:  met_met
+		title:  histo title;X axis title;Y axis title
+		type:  float
+		definition:  met_met_NOSYS
+		is_nominal_only:  False
+		binning:  0.000000,20000.000000,60000.000000,80000.000000,140000.000000,250000.000000
+
+
+		name:  met_phi
+		title:  histo title;X axis title;Y axis title
+		type:  float
+		definition:  met_phi_NOSYS
+		is_nominal_only:  False
+		binning:  16 ,  -3.2 ,  3.2
+
+
+		name:  jet1_pt
+		title:  ;Transverse momentum of jet #1;Y axis title
+		type:  float
+		definition:  jet_pt_index_1_NOSYS
+		is_nominal_only:  False
+		binning:  10 ,  0.0 ,  300000.0
+
+
+		name:  jet2_pt
+		title:  ;Transverse momentum of jet #2;Y axis title
+		type:  float
+		definition:  jet_pt_index_2_NOSYS
+		is_nominal_only:  False
+		binning:  10 ,  0.0 ,  300000.0
+
+
+		name:  jet3_pt
+		title:  ;Transverse momentum of jet #3;Y axis title
+		type:  float
+		definition:  jet_pt_index_3_NOSYS
+		is_nominal_only:  False
+		binning:  10 ,  0.0 ,  300000.0
+
+
+		name:  jet4_pt
+		title:  ;Transverse momentum of jet #4;Y axis title
+		type:  float
+		definition:  jet_pt_index_4_NOSYS
+		is_nominal_only:  False
+		binning:  10 ,  0.0 ,  300000.0
+
+
+		name:  particle_jet1_pt
+		title:  ;Transverse momentum of particle-level jet #1;Y axis title
+		type:  float
+		definition:  particle_jet_pt_index_1_NOSYS
+		is_nominal_only:  False
+		binning:  10 ,  0.0 ,  300000.0
+
+
+		name:  particle_jet2_pt
+		title:  ;Transverse momentum of particle-level jet #2;Y axis title
+		type:  float
+		definition:  particle_jet_pt_index_2_NOSYS
+		is_nominal_only:  False
+		binning:  10 ,  0.0 ,  300000.0
+
+
+		name:  particle_jet3_pt
+		title:  ;Transverse momentum of particle-level jet #3;Y axis title
+		type:  float
+		definition:  particle_jet_pt_index_3_NOSYS
+		is_nominal_only:  False
+		binning:  10 ,  0.0 ,  300000.0
+
+
+		name:  particle_jet4_pt
+		title:  ;Transverse momentum of particle-level jet #4;Y axis title
+		type:  float
+		definition:  particle_jet_pt_index_4_NOSYS
+		is_nominal_only:  False
+		binning:  10 ,  0.0 ,  300000.0
+
+
+		name:  top_pt_mass_170
+		title:  ;Transverse momentum of top-quark, m_top = 170 GeV;Y axis title
+		type:  float
+		definition:  pt_top_mass_170_NOSYS
+		is_nominal_only:  False
+		binning:  10 ,  0.0 ,  300000.0
+
+
+		name:  top_pt_mass_172.5
+		title:  ;Transverse momentum of top-quark, m_top = 172.5 GeV;Y axis title
+		type:  float
+		definition:  pt_top_mass_172.5_NOSYS
+		is_nominal_only:  False
+		binning:  10 ,  0.0 ,  300000.0
+
+
+		name:  top_pt_mass_175.0
+		title:  ;Transverse momentum of top-quark, m_top = 175.0 GeV;Y axis title
+		type:  float
+		definition:  pt_top_mass_175.0_NOSYS
+		is_nominal_only:  False
+		binning:  10 ,  0.0 ,  300000.0
+
+
+	2d combinations:
+		 met_met, met_phi
+		 particle_jet1_pt, jet1_pt
+		 particle_jet2_pt, jet1_pt
+		 particle_jet3_pt, jet1_pt
+		 particle_jet1_pt, jet2_pt
+		 particle_jet2_pt, jet2_pt
+		 particle_jet3_pt, jet2_pt
+		 particle_jet1_pt, jet3_pt
+		 particle_jet2_pt, jet3_pt
+		 particle_jet3_pt, jet3_pt
+		 particle_jet1_pt, jet4_pt
+		 particle_jet2_pt, jet4_pt
+		 particle_jet3_pt, jet4_pt
+
+
+
+
+Samples block:
+
+	name:  ttbar_FS
+	regions:  ['Electron', 'Muon']
+	weight:  (weight_mc_NOSYS * weight_beamspot * weight_pileup_NOSYS * weight_jvt_effSF_NOSYS * weight_btagSF_DL1dv01_FixedCutBEff_85_NOSYS * globalTriggerEffSF_NOSYS * weight_leptonSF_tight_NOSYS)*(my_suffix_weight_for_ttbar)
+	systematic:  ['NOSYS', 'JET_BJES_Response__1up', 'JET_BJES_Response__1down', '0p5muF_0p5muR_NNPDF31_NLO_0118', 'btag_B_1__up', 'btag_B_1__down', 'btag_C_1__up', 'btag_C_1__down', 'btag_light_1__up', 'btag_light_1__down', 'btag_light_2__up', 'btag_light_2__down', 'btag_light_3__up', 'btag_light_3__down', 'btag_light_4__up', 'btag_light_4__down']
+	selection_suffix: ""
+	reco_to_truth_pairing_indices:  ['runNumber', 'eventNumber']
+	automaticSystematics:  True
+	nominalOnly:  False
+	hasCutflows:  True
+	cutflows:
+		selection_el
+		- selection:el_pt_NOSYS[0] > 30000
+		  title:el_pt_30
+		- selection:el_pt_NOSYS[0] > 40000
+		  title:el_pt_40
+		selection_mu
+		- selection:mu_pt_NOSYS[0] > 70000
+		  title:mu_pt_70
+		- selection:mu_pt_NOSYS[0] > 90000
+		  title:mu_pt_90
+	variables:
+		 jet_pt
+		 met_met
+		 met_phi
+		 jet1_pt
+		 jet2_pt
+		 jet3_pt
+		 jet4_pt
+		 particle_jet1_pt
+		 particle_jet2_pt
+		 particle_jet3_pt
+		 particle_jet4_pt
+		 top_pt_mass_170
+		 top_pt_mass_172.5
+		 top_pt_mass_175.0
+	Unique samples:
+		 (410470,mc20e,fullsim)
+	Truth objects:
+		name:  particle
+		produce_unfolding:  True
+		truth_tree_name:  truth
+		selection:  particle_jet_pt[0] > 10000
+		event_weight:  mc_gen
+		pair_reco_and_truth_trees:  True
+		branches:  ['particle_jet_pt', 'particle_jet_eta']
+		excluded_branches:  ['particle_jet_phi']
+		match_variables:
+			 ('jet1_pt', 'truth_jet1_pt')
+			 ('jet2_pt', 'truth_jet1_pt')
+			 ('jet3_pt', 'truth_jet1_pt')
+			 ('jet4_pt', 'truth_jet1_pt')
+			 ('jet_pt', 'truth_jet_pt')
+		variables:
+			name:  truth_jet_pt
+			title:  
+			type:  float
+			definition:  particle_jet_pt
+			binning:  10 ,  0.0 ,  10.0
+			name:  truth_jet1_pt
+			title:  
+			type:  float
+			definition:  particle_jet1_pt
+			binning:  10 ,  0.0 ,  10.0
+			name:  truth_jet2_pt
+			title:  
+			type:  float
+			definition:  particle_jet2_pt
+			binning:  10 ,  0.0 ,  10.0
+			name:  truth_jet3_pt
+			title:  
+			type:  float
+			definition:  particle_jet3_pt
+			binning:  10 ,  0.0 ,  10.0
+			name:  truth_jet4_pt
+			title:  
+			type:  float
+			definition:  particle_jet4_pt
+			binning:  10 ,  0.0 ,  10.0
+			name:  truth_el_pt
+			title:  
+			type:  float
+			definition:  particle_el_pt
+			binning:  0.000000,2.000000,5.000000,7.000000,8.000000,10.000000,15.000000
+	Custom defines:
+		 "HT_2_jets" -> "jet_pt_NOSYS[0] + jet_pt_NOSYS[1]"
+	Custom defines truth:
+		- name: HT_ttbar
+		  definition: truth_top_pt + truth_tbar_pt
+		  truth_tree: truth
+	Excluded systematics:
+		 GEN_*.
+	Systematic uncertainties defined for this sample:
+
+		name:  NOSYS
+		regions:  ['Electron', 'Muon']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+		name:  JET_BJES_Response__1up
+		regions:  ['Electron']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+		name:  JET_BJES_Response__1down
+		regions:  ['Electron']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+		name:  0p5muF_0p5muR_NNPDF31_NLO_0118
+		regions:  ['Electron', 'Muon']
+		weight_suffix:  
+		sum_weights:  0p5muF_0p5muR_NNPDF31_NLO_0118
+
+
+		name:  btag_B_1__up
+		regions:  ['Electron', 'Muon']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+		name:  btag_B_1__down
+		regions:  ['Electron', 'Muon']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+		name:  btag_C_1__up
+		regions:  ['Electron']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+		name:  btag_C_1__down
+		regions:  ['Electron']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+		name:  btag_light_1__up
+		regions:  ['Electron']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+		name:  btag_light_1__down
+		regions:  ['Electron']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+		name:  btag_light_2__up
+		regions:  ['Electron']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+		name:  btag_light_2__down
+		regions:  ['Electron']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+		name:  btag_light_3__up
+		regions:  ['Electron']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+		name:  btag_light_3__down
+		regions:  ['Electron']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+		name:  btag_light_4__up
+		regions:  ['Electron']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+		name:  btag_light_4__down
+		regions:  ['Electron']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+
+
+
+
+	name:  Zjets_light
+	regions:  ['Muon']
+	weight:  weight_mc_NOSYS
+	systematic:  ['NOSYS', 'btag_B_1__up', 'btag_B_1__down']
+	selection_suffix: "n_bjets_truth == 0 && n_cjets_truth == 0"
+	reco_to_truth_pairing_indices:  ['runNumber', 'eventNumber']
+	automaticSystematics:  False
+	nominalOnly:  False
+	hasCutflows:  False
+	variables:
+		 met_met
+		 met_phi
+		 jet1_pt
+		 jet2_pt
+		 jet3_pt
+		 jet4_pt
+		 particle_jet1_pt
+		 particle_jet2_pt
+		 particle_jet3_pt
+		 particle_jet4_pt
+		 top_pt_mass_170
+		 top_pt_mass_172.5
+		 top_pt_mass_175.0
+	Unique samples:
+		 (364100,mc20e,fullsim)
+		 (364101,mc20e,fullsim)
+	Custom defines:
+		 "HT_3_jets" -> "jet_pt_NOSYS[0] + jet_pt_NOSYS[1] + jet_pt_NOSYS[2]"
+	Excluded systematics:
+		 btag_B_eff_*.
+	Systematic uncertainties defined for this sample:
+
+		name:  NOSYS
+		regions:  ['Electron', 'Muon']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+		name:  btag_B_1__up
+		regions:  ['Electron', 'Muon']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+		name:  btag_B_1__down
+		regions:  ['Electron', 'Muon']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+
+
+
+
+	name:  Zjets_b
+	regions:  ['Electron']
+	weight:  weight_mc_NOSYS
+	systematic:  ['NOSYS', 'btag_B_1__up', 'btag_B_1__down', 'btag_C_1__up', 'btag_C_1__down', 'btag_light_1__up', 'btag_light_1__down', 'btag_light_2__up', 'btag_light_2__down', 'btag_light_3__up', 'btag_light_3__down', 'btag_light_4__up', 'btag_light_4__down']
+	selection_suffix: "n_bjets_truth > 0"
+	reco_to_truth_pairing_indices:  ['runNumber', 'eventNumber']
+	automaticSystematics:  False
+	nominalOnly:  False
+	hasCutflows:  False
+	variables:
+		 jet_pt
+		 met_met
+		 met_phi
+	Unique samples:
+		 (364100,mc20e,fullsim)
+		 (364101,mc20e,fullsim)
+	Custom defines:
+		 "HT_2_jets" -> "jet_pt_NOSYS[0] + jet_pt_NOSYS[1]"
+	Excluded systematics:
+		 GEN_*.
+	Systematic uncertainties defined for this sample:
+
+		name:  NOSYS
+		regions:  ['Electron', 'Muon']
+		weight_suffix:  
+		sum_weights:  alternative_sum_weights
+
+
+		name:  btag_B_1__up
+		regions:  ['Electron', 'Muon']
+		weight_suffix:  
+		sum_weights:  alternative_sum_weights
+
+
+		name:  btag_B_1__down
+		regions:  ['Electron', 'Muon']
+		weight_suffix:  
+		sum_weights:  alternative_sum_weights
+
+
+		name:  btag_C_1__up
+		regions:  ['Electron']
+		weight_suffix:  
+		sum_weights:  alternative_sum_weights
+
+
+		name:  btag_C_1__down
+		regions:  ['Electron']
+		weight_suffix:  
+		sum_weights:  alternative_sum_weights
+
+
+		name:  btag_light_1__up
+		regions:  ['Electron']
+		weight_suffix:  
+		sum_weights:  alternative_sum_weights
+
+
+		name:  btag_light_1__down
+		regions:  ['Electron']
+		weight_suffix:  
+		sum_weights:  alternative_sum_weights
+
+
+		name:  btag_light_2__up
+		regions:  ['Electron']
+		weight_suffix:  
+		sum_weights:  alternative_sum_weights
+
+
+		name:  btag_light_2__down
+		regions:  ['Electron']
+		weight_suffix:  
+		sum_weights:  alternative_sum_weights
+
+
+		name:  btag_light_3__up
+		regions:  ['Electron']
+		weight_suffix:  
+		sum_weights:  alternative_sum_weights
+
+
+		name:  btag_light_3__down
+		regions:  ['Electron']
+		weight_suffix:  
+		sum_weights:  alternative_sum_weights
+
+
+		name:  btag_light_4__up
+		regions:  ['Electron']
+		weight_suffix:  
+		sum_weights:  alternative_sum_weights
+
+
+		name:  btag_light_4__down
+		regions:  ['Electron']
+		weight_suffix:  
+		sum_weights:  alternative_sum_weights
+
+
+
+
+
+
+	name:  sample_squence_0p5
+	regions:  ['Electron']
+	weight:  weight_mc_0p5
+	systematic:  ['NOSYS', 'btag_B_1__up', 'btag_B_1__down', 'btag_C_1__up', 'btag_C_1__down', 'btag_light_1__up', 'btag_light_1__down', 'btag_light_2__up', 'btag_light_2__down', 'btag_light_3__up', 'btag_light_3__down', 'btag_light_4__up', 'btag_light_4__down']
+	selection_suffix: "n_bjets_truth > 0"
+	reco_to_truth_pairing_indices:  ['runNumber', 'eventNumber']
+	automaticSystematics:  False
+	nominalOnly:  False
+	hasCutflows:  False
+	variables:
+		 jet_pt
+		 met_met
+		 met_phi
+	Unique samples:
+		 (364105,mc20e,fullsim)
+	Custom defines:
+		 "HT_2_jets" -> "jet_pt_NOSYS[0] + jet_pt_NOSYS[1]"
+	Excluded systematics:
+		 GEN_*.
+	Systematic uncertainties defined for this sample:
+
+		name:  NOSYS
+		regions:  ['Electron', 'Muon']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+		name:  btag_B_1__up
+		regions:  ['Electron', 'Muon']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+		name:  btag_B_1__down
+		regions:  ['Electron', 'Muon']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+		name:  btag_C_1__up
+		regions:  ['Electron']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+		name:  btag_C_1__down
+		regions:  ['Electron']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+		name:  btag_light_1__up
+		regions:  ['Electron']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+		name:  btag_light_1__down
+		regions:  ['Electron']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+		name:  btag_light_2__up
+		regions:  ['Electron']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+		name:  btag_light_2__down
+		regions:  ['Electron']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+		name:  btag_light_3__up
+		regions:  ['Electron']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+		name:  btag_light_3__down
+		regions:  ['Electron']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+		name:  btag_light_4__up
+		regions:  ['Electron']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+		name:  btag_light_4__down
+		regions:  ['Electron']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+
+
+
+
+	name:  sample_squence_0p8
+	regions:  ['Electron']
+	weight:  weight_mc_0p8
+	systematic:  ['NOSYS', 'btag_B_1__up', 'btag_B_1__down', 'btag_C_1__up', 'btag_C_1__down', 'btag_light_1__up', 'btag_light_1__down', 'btag_light_2__up', 'btag_light_2__down', 'btag_light_3__up', 'btag_light_3__down', 'btag_light_4__up', 'btag_light_4__down']
+	selection_suffix: "n_bjets_truth > 0"
+	reco_to_truth_pairing_indices:  ['runNumber', 'eventNumber']
+	automaticSystematics:  False
+	nominalOnly:  False
+	hasCutflows:  False
+	variables:
+		 jet_pt
+		 met_met
+		 met_phi
+	Unique samples:
+		 (364105,mc20e,fullsim)
+	Custom defines:
+		 "HT_2_jets" -> "jet_pt_NOSYS[0] + jet_pt_NOSYS[1]"
+	Excluded systematics:
+		 GEN_*.
+	Systematic uncertainties defined for this sample:
+
+		name:  NOSYS
+		regions:  ['Electron', 'Muon']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+		name:  btag_B_1__up
+		regions:  ['Electron', 'Muon']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+		name:  btag_B_1__down
+		regions:  ['Electron', 'Muon']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+		name:  btag_C_1__up
+		regions:  ['Electron']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+		name:  btag_C_1__down
+		regions:  ['Electron']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+		name:  btag_light_1__up
+		regions:  ['Electron']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+		name:  btag_light_1__down
+		regions:  ['Electron']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+		name:  btag_light_2__up
+		regions:  ['Electron']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+		name:  btag_light_2__down
+		regions:  ['Electron']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+		name:  btag_light_3__up
+		regions:  ['Electron']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+		name:  btag_light_3__down
+		regions:  ['Electron']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+		name:  btag_light_4__up
+		regions:  ['Electron']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+		name:  btag_light_4__down
+		regions:  ['Electron']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+
+
+
+
+	name:  sample_squence_1p8
+	regions:  ['Electron']
+	weight:  weight_mc_1p8
+	systematic:  ['NOSYS', 'btag_B_1__up', 'btag_B_1__down', 'btag_C_1__up', 'btag_C_1__down', 'btag_light_1__up', 'btag_light_1__down', 'btag_light_2__up', 'btag_light_2__down', 'btag_light_3__up', 'btag_light_3__down', 'btag_light_4__up', 'btag_light_4__down']
+	selection_suffix: "n_bjets_truth > 0"
+	reco_to_truth_pairing_indices:  ['runNumber', 'eventNumber']
+	automaticSystematics:  False
+	nominalOnly:  False
+	hasCutflows:  False
+	variables:
+		 jet_pt
+		 met_met
+		 met_phi
+	Unique samples:
+		 (364105,mc20e,fullsim)
+	Custom defines:
+		 "HT_2_jets" -> "jet_pt_NOSYS[0] + jet_pt_NOSYS[1]"
+	Excluded systematics:
+		 GEN_*.
+	Systematic uncertainties defined for this sample:
+
+		name:  NOSYS
+		regions:  ['Electron', 'Muon']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+		name:  btag_B_1__up
+		regions:  ['Electron', 'Muon']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+		name:  btag_B_1__down
+		regions:  ['Electron', 'Muon']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+		name:  btag_C_1__up
+		regions:  ['Electron']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+		name:  btag_C_1__down
+		regions:  ['Electron']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+		name:  btag_light_1__up
+		regions:  ['Electron']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+		name:  btag_light_1__down
+		regions:  ['Electron']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+		name:  btag_light_2__up
+		regions:  ['Electron']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+		name:  btag_light_2__down
+		regions:  ['Electron']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+		name:  btag_light_3__up
+		regions:  ['Electron']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+		name:  btag_light_3__down
+		regions:  ['Electron']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+		name:  btag_light_4__up
+		regions:  ['Electron']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+		name:  btag_light_4__down
+		regions:  ['Electron']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+
+
+
+
+	name:  sample_squence_2p0
+	regions:  ['Electron']
+	weight:  weight_mc_2p0
+	systematic:  ['NOSYS', 'btag_B_1__up', 'btag_B_1__down', 'btag_C_1__up', 'btag_C_1__down', 'btag_light_1__up', 'btag_light_1__down', 'btag_light_2__up', 'btag_light_2__down', 'btag_light_3__up', 'btag_light_3__down', 'btag_light_4__up', 'btag_light_4__down']
+	selection_suffix: "n_bjets_truth > 0"
+	reco_to_truth_pairing_indices:  ['runNumber', 'eventNumber']
+	automaticSystematics:  False
+	nominalOnly:  False
+	hasCutflows:  False
+	variables:
+		 jet_pt
+		 met_met
+		 met_phi
+	Unique samples:
+		 (364105,mc20e,fullsim)
+	Custom defines:
+		 "HT_2_jets" -> "jet_pt_NOSYS[0] + jet_pt_NOSYS[1]"
+	Excluded systematics:
+		 GEN_*.
+	Systematic uncertainties defined for this sample:
+
+		name:  NOSYS
+		regions:  ['Electron', 'Muon']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+		name:  btag_B_1__up
+		regions:  ['Electron', 'Muon']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+		name:  btag_B_1__down
+		regions:  ['Electron', 'Muon']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+		name:  btag_C_1__up
+		regions:  ['Electron']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+		name:  btag_C_1__down
+		regions:  ['Electron']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+		name:  btag_light_1__up
+		regions:  ['Electron']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+		name:  btag_light_1__down
+		regions:  ['Electron']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+		name:  btag_light_2__up
+		regions:  ['Electron']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+		name:  btag_light_2__down
+		regions:  ['Electron']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+		name:  btag_light_3__up
+		regions:  ['Electron']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+		name:  btag_light_3__down
+		regions:  ['Electron']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+		name:  btag_light_4__up
+		regions:  ['Electron']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+		name:  btag_light_4__down
+		regions:  ['Electron']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+
+
+
+
+	name:  Wjets_FS
+	regions:  ['Electron']
+	weight:  weight_mc_NOSYS * weight_beamspot * weight_pileup_NOSYS * weight_jvt_effSF_NOSYS * weight_btagSF_DL1dv01_FixedCutBEff_85_NOSYS * globalTriggerEffSF_NOSYS * weight_leptonSF_tight_NOSYS
+	systematic:  ['NOSYS']
+	selection_suffix: ""
+	reco_to_truth_pairing_indices:  ['runNumber', 'eventNumber']
+	automaticSystematics:  False
+	nominalOnly:  True
+	hasCutflows:  False
+	variables:
+		 met_met
+		 met_phi
+	Unique samples:
+		 (700341,mc20a,fullsim)
+		 (700342,mc20a,fullsim)
+		 (700344,mc20a,fullsim)
+		 (700341,mc20e,fullsim)
+		 (700342,mc20e,fullsim)
+		 (700344,mc20e,fullsim)
+	Custom defines:
+		 "HT_2_jets" -> "jet_pt_NOSYS[0] + jet_pt_NOSYS[1]"
+	Excluded systematics:
+		 GEN_*.
+	Systematic uncertainties defined for this sample:
+
+		name:  NOSYS
+		regions:  ['Electron', 'Muon']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+
+
+
+
+	name:  fakes
+	regions:  ['Electron', 'Muon']
+	weight:  weight_mc_NOSYS * weight_beamspot * weight_pileup_NOSYS * weight_jvt_effSF_NOSYS * weight_btagSF_DL1dv01_FixedCutBEff_85_NOSYS * globalTriggerEffSF_NOSYS * weight_leptonSF_tight_NOSYS
+	systematic:  ['NOSYS']
+	selection_suffix: "n_fakes > 0"
+	reco_to_truth_pairing_indices:  ['runNumber', 'eventNumber']
+	automaticSystematics:  False
+	nominalOnly:  True
+	hasCutflows:  False
+	variables:
+		 jet_pt
+		 met_met
+		 met_phi
+		 jet1_pt
+		 jet2_pt
+		 jet3_pt
+		 jet4_pt
+		 particle_jet1_pt
+		 particle_jet2_pt
+		 particle_jet3_pt
+		 particle_jet4_pt
+		 top_pt_mass_170
+		 top_pt_mass_172.5
+		 top_pt_mass_175.0
+	Unique samples:
+		 (700341,mc20a,fullsim)
+		 (700342,mc20a,fullsim)
+		 (700344,mc20a,fullsim)
+		 (700341,mc20e,fullsim)
+		 (700342,mc20e,fullsim)
+		 (700344,mc20e,fullsim)
+		 (364100,mc20e,fullsim)
+		 (364101,mc20e,fullsim)
+		 (410470,mc20e,fullsim)
+	Custom defines:
+		 "HT_2_jets" -> "jet_pt_NOSYS[0] + jet_pt_NOSYS[1]"
+	Excluded systematics:
+		 GEN_*.
+	Systematic uncertainties defined for this sample:
+
+		name:  NOSYS
+		regions:  ['Electron', 'Muon']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+
+
+
+
+	name:  Data
+	regions:  ['Electron', 'Muon']
+	weight:  1.
+	systematic:  ['NOSYS', 'bootstraps1']
+	selection_suffix: ""
+	reco_to_truth_pairing_indices:  ['runNumber', 'eventNumber']
+	automaticSystematics:  False
+	nominalOnly:  False
+	hasCutflows:  True
+	cutflows:
+		selection_el
+		- selection:el_pt_NOSYS[0] > 30000
+		  title:el_pt_30
+		- selection:el_pt_NOSYS[0] > 40000
+		  title:el_pt_40
+	variables:
+		 met_met
+	Unique samples:
+		 (0,2018,data)
+	Custom defines:
+		 "HT_2_jets" -> "jet_pt_NOSYS[0] + jet_pt_NOSYS[1]"
+	Excluded systematics:
+		 GEN_*.
+	Systematic uncertainties defined for this sample:
+
+		name:  NOSYS
+		regions:  ['Electron', 'Muon']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+		name:  bootstraps1
+		regions:  ['Electron', 'Muon']
+		weight_suffix:  bootstrap_weight1
+		sum_weights:  NOSYS
+
+
+
+
+
+

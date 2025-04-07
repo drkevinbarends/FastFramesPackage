@@ -1,0 +1,78 @@
+Fit:
+  FitType: "SPLUSB"
+  FitRegion: "CRSR"
+  POIAsimov: 1
+  FitBlind: "True"
+  CmeLabel: 13.6
+
+samples:
+    - name: "ttbar_FS"
+      Color: 50
+      Title: "t#bar{t}"
+      Type: "Signal"
+
+variables:
+  - name: "met_met"
+    VariableTitle: "MET [GeV]"
+
+excluded_systematics: ["JET_EffectiveNP_Statistical\\d", "JET_JER_DataVsMC_MC16"]
+
+#selected_systematics: ["JET_JER_DataVsMC_MC16"]
+
+CustomBlocks:
+  Sample:
+    - name: "ttll_syst_PDF_nominal"
+      Title: "ttll PDF nominal"
+      Type: GHOST
+      HistoFolderName: "GEN_MUR10_MUF10_PDF93300"
+      HistoFile: "ttll_FS"
+
+Systematics:
+    - name: "Luminosity"
+      Title: "Luminosity"
+      Type: "OVERALL"
+      OverallUp: 0.017
+      OverallDown: -0.017
+      Category: "Instrumental"
+
+    - name: "Wjets_xsec"
+      Title: "W+jets cross-section"
+      Type: "OVERALL"
+      OverallUp: 0.1
+      OverallDown: -0.1
+      Samples: "Wjets"
+      Category: "Theoretical"
+
+    - name: "GEN_bb4l_PDF_909#N"
+      HistoFolderNameUp: "PDFset909#N"
+      ReferenceSample: "bb4l_PDF4LHC_baseline_FS"
+      Samples: "ttbar_FS"
+      Type: HISTO
+      Title: "PDF4LHC909#N"
+      Symmetrisation: ONESIDED
+      Smoothing: 40
+      Category: "ttbar_PDF"
+      numbering_sequence:
+        - replacement_string: '#N'
+          values: ["01","02"]
+
+Regions:
+  - name: "Muon"
+    Label: "#mu+jets"
+    ShortLabel: "#mu+jets"
+
+NormFactors:
+    - name: "mu_signal"
+      Title: "#mu(signal)"
+      Nominal: 1
+      Min: -100
+      Max: 100
+      Samples: "ttbar_FS"
+
+    - name: "N_wjets"
+      Title: "#mu(W+jets)"
+      Nominal: 1
+      Min: -100
+      Max: 100
+      Samples: "Wjets"
+

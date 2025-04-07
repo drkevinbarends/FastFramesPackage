@@ -1,0 +1,2 @@
+dataset_number/I:physics_short/C:crossSection_pb/D:genFiltEff/D:kFactor/D:relUncertUP/D:relUncertDOWN/D:generator_name/C:etag/C
+601229		PhPy8EG_A14_ttbar_hdamp258p75_SingleLep		811.29		4.384506E-01		1.1384198		0.0		0.0		Powheg(v.2_r3631)+Pythia8(v.308)+EvtGen(v.2.1.1)		e8514

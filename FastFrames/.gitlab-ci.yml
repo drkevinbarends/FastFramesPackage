@@ -1,0 +1,432 @@
+workflow: # Run the complete pipeline when pushing or when a merge request is created
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_PIPELINE_SOURCE == "push"
+
+variables:
+  ASETUP_VERSION: StatAnalysis,0.5.0
+
+default:
+  image: gitlab-registry.cern.ch/atlas-sit/docker/alma9-atlasos:latest
+  tags:
+    - k8s-cvmfs
+  before_script:
+    - ulimit -n 1048576
+    - set +e
+    - export ATLAS_LOCAL_ROOT_BASE=/cvmfs/atlas.cern.ch/repo/ATLASLocalRootBase
+    - source ${ATLAS_LOCAL_ROOT_BASE}/user/atlasLocalSetup.sh --quiet
+    - asetup ${ASETUP_VERSION}
+
+stages:
+  - build
+  - build_docker_image
+  - build_custom_class
+  - check
+  - run
+  - compare_results
+  - webpage
+
+cmake:
+  stage: build
+  script:
+   - mkdir -p build && cd build
+   - cmake -DCMAKE_INSTALL_PREFIX=../install/ .. | tee cmake.log
+  artifacts:
+   paths:
+    - build
+   expire_in: 1d
+
+make_doxygen:
+  stage: build
+  script:
+     - yum -y install doxygen graphviz
+     - mkdir -p doc_build && cd doc_build
+     - cmake -DBUILD_DOC=ON .. | tee cmake.log
+     - make doc_doxygen
+     - ls
+  artifacts:
+     paths:
+      - doc_build/docs/
+     expire_in: 1d
+
+build_webpage:
+  stage: build
+  needs: []
+  image: gitlab-registry.cern.ch/authoring/documentation/mkdocs
+  script:
+     - mkdocs build --strict --clean --site-dir www
+  before_script:
+    - "" # overwrite default, do nothing
+  artifacts:
+    paths:
+      - www
+    expire_in: 1 hour
+
+build_image:
+  allow_failure: true
+  stage: build_docker_image
+  variables:
+    BUILD_IMAGE: gitlab-registry.cern.ch/atlas-sit/docker/alma9-atlasos:latest
+  image:
+    # The kaniko debug image is recommended because it has a shell, and a shell is required for an image to be used with GitLab CI/CD.
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [""]
+  before_script:
+    - ""
+  script:
+    # Determine the tag to use for the Docker image.
+    - IMAGE_DESTINATION="${CI_REGISTRY_IMAGE}:$(if [[ $CI_COMMIT_REF_NAME == 'main' ]]; then echo 'latest'; else echo $CI_COMMIT_REF_NAME; fi)"
+    - echo "Using image destination:\ ${IMAGE_DESTINATION}"
+    # Set the Dockerfile FROM line to the build image.
+    - DOCKER_FROM="FROM ${BUILD_IMAGE}"; sed -i "1s~.*~$DOCKER_FROM~" $CI_PROJECT_DIR/Dockerfile
+    # Set the asetup version in the Dockerfile.
+    - sed -i "s~ARG ASETUP_VERSION=.*~ARG ASETUP_VERSION=${ASETUP_VERSION}~" $CI_PROJECT_DIR/Dockerfile
+    # Build and push the image from the Dockerfile at the root of the project.
+    - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/Dockerfile --destination $IMAGE_DESTINATION
+    # Print the full registry path of the pushed image
+    - echo "Image pushed successfully to ${IMAGE_DESTINATION}"
+  only:
+    refs:
+      - main
+      - tags
+
+compile:
+  stage: build
+  needs:
+    - cmake
+  script:
+     - cd build
+     - make clean #make sure we don't have residual compilation results
+     - make -j4 2>&1 | tee -a make.log  #dump the log files
+  artifacts:
+     paths:
+      - build
+     expire_in: 1d
+
+check_changelog: #
+  stage: build
+  script:
+     - echo "Executing diff in the changelog"
+     - git fetch
+     - git diff HEAD^ -- docs/changelog/index.md > changelog_diff.txt # Compare the changelog with previous commit
+     - echo "Changelog differences:"
+     - cat changelog_diff.txt
+     - if [ $(wc -l < changelog_diff.txt) -eq 0 ]; then exit 1; fi # Fail if no differences are found
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" # Only run this job for merge requests
+      changes: # when the code files have changed
+        - data/*
+        - python/*
+        - python/*
+        - python_wrapper/*
+        - Root/*
+        - test/*
+        - util/*
+        - FastFrames/*
+        - examples/*
+        - CMakeLists.txt
+      allow_failure: true # Just alert the user that the changelog was not updated
+
+cmake_custom_class:
+  stage: build_custom_class
+  needs:
+    - compile
+    - install
+  script:
+    - mkdir -p CustomClass
+    - cp -r examples/CustomVariables/* CustomClass/
+    - cd CustomClass
+    - cmake -S . -B build -DCMAKE_PREFIX_PATH=../install -DCMAKE_INSTALL_PREFIX=install
+  artifacts:
+    paths:
+      - build
+      - install
+      - CustomClass
+    expire_in: 1d
+
+compile_custom_class:
+  stage: build_custom_class
+  needs:
+    - cmake_custom_class
+  script:
+    - cd CustomClass
+    - cmake --build build -j4 --target install
+  artifacts:
+    paths:
+      - CustomClass
+      - build
+      - install
+    expire_in: 1d
+
+compile_latest:
+  stage: build
+  before_script:
+    - set +e # overwrite default, do nothing
+  script:
+     - export ATLAS_LOCAL_ROOT_BASE=/cvmfs/atlas.cern.ch/repo/ATLASLocalRootBase
+     - source ${ATLAS_LOCAL_ROOT_BASE}/user/atlasLocalSetup.sh --quiet
+     - asetup main,StatAnalysis,latest
+     - mkdir -p build && cd build
+     - cmake .. | tee cmake.log
+     - make -j4 2>&1 | tee -a make.log  #dump the log files
+  artifacts:
+     paths:
+      - build
+     expire_in: 1d
+  allow_failure: true
+
+
+install:
+  stage: build
+  needs:
+    - cmake
+  script:
+     - mkdir -p install
+     - cd build
+     - make install | tee -a install.log  #dump the log files
+  artifacts:
+     paths:
+      - install
+     expire_in: 1d
+
+cppcheck:
+  stage: check
+  # image is from https://hub.docker.com/r/neszt/cppcheck-docker
+  image:
+    name: registry.cern.ch/docker.io/neszt/cppcheck-docker:2.12.1
+    entrypoint: [""]
+  before_script:
+    - "" # overwrite default, do nothing
+  needs:
+    - compile
+  script:
+    - cppcheck --version
+    - echo "running cppcheck"
+    - set +e
+    - echo $ROOTSYS
+    - cppcheck --enable=all --verbose --output-file=cppcheck.txt --inline-suppr --language=c++ --suppress=useStlAlgorithm --project=build/compile_commands.json --suppress=missingIncludeSystem --suppress=unusedFunction --suppress=missingInclude --suppress=*:build/* --suppress=*:/cvmfs/* --check-level=exhaustive
+    - cat cppcheck.txt
+    - source test/scripts/cppcheck_output.sh
+  allow_failure: true
+  artifacts:
+    paths:
+      - cppcheck.txt
+    expire_in: 1d
+    when: always
+
+python_config_reader_test:
+  stage: run
+  needs:
+    - compile
+  script:
+     - cd python/ConfigReaderModules/
+     - python3 ConfigReader.py --config ../../test/reference_files/configs_run/config.yml
+
+run_filelist:
+  stage: run
+  needs:
+    - compile
+  script:
+     - python3 python/produce_metadata_files.py --root_files_folder test/input/
+  artifacts:
+     paths:
+      - test/input/
+     expire_in: 1d
+
+run_cpp:
+  stage: run
+  needs:
+    - compile
+    - run_filelist
+  script:
+     - ./build/bin/fast-frames.exe
+  artifacts:
+     paths:
+      - ttbar_FS.root
+     expire_in: 1d
+
+produce_trexfitter_config:
+  stage: run
+  needs:
+    - compile
+    - run_python_histograms
+  script:
+     - python3 python/produce_trexfitter_config.py --config test/reference_files/configs_run/config.yml
+  allow_failure: true
+
+run_python_histograms:
+  stage: run
+  needs:
+    - compile
+    - run_filelist
+  script:
+     - python3 python/FastFrames.py --config test/reference_files/configs_run/config.yml --step h
+  artifacts:
+     paths:
+      - ttbar_FS.root
+      - Wjets.root
+      - Data.root
+     expire_in: 1d
+
+run_python_histograms_custom_class:
+  stage: run
+  needs:
+    - compile_custom_class
+    - run_filelist
+  script:
+     - source CustomClass/build/setup.sh
+     - python3 python/FastFrames.py --config test/reference_files/config_reading/config_custom_class.yml --step h
+  artifacts:
+     paths:
+      - ttbar_FS.root
+      - Wjets.root
+      - Data.root
+     expire_in: 1d
+
+run_python_ntuples:
+  stage: run
+  needs:
+    - compile
+    - run_filelist
+  script:
+     - python3 python/FastFrames.py --config test/reference_files/configs_run/config.yml --step n
+  artifacts:
+     paths:
+      - ttbar_FS.root
+      - Wjets.root
+      - Data.root
+     expire_in: 1d
+  artifacts:
+     paths:
+      - output_ntuples/
+     expire_in: 1d
+
+run_python_histograms_on_ntuple_output:
+  stage: run
+  needs:
+    - compile
+    - run_python_ntuples
+  script:
+     - python3 python/produce_metadata_files.py --root_files_folder output_ntuples/
+     - python3 python/FastFrames.py --config test/reference_files/configs_run/config_histogram_after_ntuple.yml --step h
+  artifacts:
+     paths:
+      - output_histogram/ttbar_FS.root
+      - output_histogram/Wjets.root
+      - output_histogram/Data.root
+     expire_in: 1d
+
+config_reader_comparison:
+  stage: compare_results
+  needs:
+    - compile
+  script:
+     - python3 python/ConfigReaderModules/ConfigReader.py --config test/reference_files/config_reading/config_testing.yml > log.txt
+     - python3 test/python/compare_two_files.py log.txt test/reference_files/config_reading/reference_log.txt
+  allow_failure: true
+
+trex_fitter_configs_comparison:
+  stage: compare_results
+  needs:
+    - compile
+    - run_filelist
+  script:
+     - sudo yum makecache --refresh
+     - yum -y install colordiff
+     - python3 python/FastFrames.py --c test/reference_files/config_reading/config_TRExFitter_test.yml
+     - python3 test/python/compare_trex_configs.py
+  allow_failure: true
+
+config_reader_comparison_CLI_samples:
+  stage: compare_results
+  needs:
+    - compile
+  script:
+     - python3 python/ConfigReaderModules/ConfigReader.py --config test/reference_files/config_reading/config_testing.yml --samples Wjets_FS,ttbar_FS --split_n_jobs 10 --job_index 1 --output_path_histograms output/histograms/ --output_path_ntuples output/ntuples  --filter_campaigns mc20e > log.txt
+     - python3 test/python/compare_two_files.py log.txt test/reference_files/config_reading/reference_log_samples_ttbar_Wjets.txt
+  allow_failure: true
+
+config_reader_comparison_nested_anchors:
+  stage: compare_results
+  needs:
+    - compile
+  script:
+     - python3 python/ConfigReaderModules/ConfigReader.py --config test/reference_files/config_reading/config_nested_anchors_test.yml > log.txt
+     - python3 test/python/compare_two_files.py log.txt test/reference_files/config_reading/reference_nested_anchors.txt
+  allow_failure: true
+
+config_reader_comparison_MiniAnalysis:
+  stage: compare_results
+  needs:
+    - compile
+  script:
+     - python3 python/ConfigReaderModules/ConfigReader.py --config test/reference_files/config_reading/config_MiniAnalysis.yml > log.txt
+     - python3 test/python/compare_two_files.py log.txt test/reference_files/config_reading/reference_MiniAnalysis.txt
+  allow_failure: true
+
+root_files_comparison_histograms:
+  stage: compare_results
+  needs:
+    - compile
+    - run_filelist
+  script:
+     - python3 python/FastFrames.py --c test/reference_files/configs_root_files_comparison/config.yml --step h
+     - python3 test/python/compare_two_root_files.py Data.root test/reference_files/configs_root_files_comparison/output_histograms/Data.root
+     - python3 test/python/compare_two_root_files.py Wjets.root test/reference_files/configs_root_files_comparison/output_histograms/Wjets.root
+     - python3 test/python/compare_two_root_files.py ttbar_FS.root test/reference_files/configs_root_files_comparison/output_histograms/ttbar_FS.root
+  allow_failure: true
+
+root_files_comparison_ntuples:
+  stage: compare_results
+  needs:
+    - compile
+    - run_filelist
+  script:
+     - python3 python/FastFrames.py --c test/reference_files/configs_root_files_comparison/config.yml --step n --samples Data,Wjets
+     - python3 test/python/compare_two_root_files.py output_ntuples/Data_0_2017_data.root test/reference_files/configs_root_files_comparison/output_ntuples/Data_0_2017_data.root
+     - python3 test/python/compare_two_root_files.py output_ntuples/Wjets_700341_mc20a_fullsim.root test/reference_files/configs_root_files_comparison/output_ntuples/Wjets_700341_mc20a_fullsim.root
+  allow_failure: true
+
+doxygen_webpage:
+  stage: webpage
+  rules:
+    - if: '$CI_PROJECT_NAMESPACE == "atlas-amglab" && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+  needs:
+    - make_doxygen
+  before_script:
+    - date
+    - echo "${EOS_ACCOUNT_PASSWORD}" | kinit ${EOS_ACCOUNT_USERNAME}@CERN.CH
+    - klist
+    - cp docs/custom_krb5.conf /etc/krb5.conf
+    - cp docs/custom_ssh.conf /etc/ssh/ssh_config
+    - mkdir -p ~/.ssh
+    - ls ~/.ssh
+    - echo -e "Host lxplus.cern.ch\n\tUser ${EOS_ACCOUNT_USERNAME}\n\tStrictHostKeyChecking no\n\tGSSAPIAuthentication yes\n\tGSSAPIDelegateCredentials yes\n\tProtocol 2\n\tForwardX11 no\n\tIdentityFile ~/.ssh/id_rsa" >> ~/.ssh/config
+    - cat ~/.ssh/config
+    - date
+  script:
+    - ls doc_build/
+    - ls doc_build/docs
+    - ls doc_build/docs/html
+    - tar cvzf - -C doc_build/docs/html/ . | ssh ${EOS_ACCOUNT_USERNAME}@lxplus.cern.ch tar xzf - -C /eos/user/t/topreco/www/fastframesdoxygen
+
+documentation_webpage:
+  stage: webpage
+  rules:
+    - if: '$CI_PROJECT_NAMESPACE == "atlas-amglab" && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+  needs:
+    - build_webpage
+  before_script:
+    - date
+    - echo "${EOS_ACCOUNT_PASSWORD}" | kinit ${EOS_ACCOUNT_USERNAME}@CERN.CH
+    - klist
+    - cp docs/custom_krb5.conf /etc/krb5.conf
+    - cp docs/custom_ssh.conf /etc/ssh/ssh_config
+    - mkdir -p ~/.ssh
+    - ls ~/.ssh
+    - echo -e "Host lxplus.cern.ch\n\tUser ${EOS_ACCOUNT_USERNAME}\n\tStrictHostKeyChecking no\n\tGSSAPIAuthentication yes\n\tGSSAPIDelegateCredentials yes\n\tProtocol 2\n\tForwardX11 no\n\tIdentityFile ~/.ssh/id_rsa" >> ~/.ssh/config
+    - cat ~/.ssh/config
+    - date
+  script:
+    - ls www/
+    - tar cvzf - -C www/ . | ssh ${EOS_ACCOUNT_USERNAME}@lxplus.cern.ch tar xzf - -C /eos/user/t/topreco/www/fastframesdocumentation

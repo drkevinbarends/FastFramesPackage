@@ -1,0 +1,176 @@
+general:
+  debug_level: DEBUG
+
+  # paths
+  input_filelist_path: "/afs/cern.ch/user/k/kebarend/public/tWZ/FastFramesPackage/input/filelist.txt"
+  input_sumweights_path: "/afs/cern.ch/user/k/kebarend/public/tWZ/FastFramesPackage/input/sum_of_weights.txt"
+  output_path_histograms: "/afs/cern.ch/user/k/kebarend/public/tWZ/FastFramesPackage/output_histograms/"
+  output_path_ntuples: "/eos/user/k/kebarend/tWZ/ntuples/FastFrames/${region}"
+
+  # weights
+  default_sumweights: "NOSYS"
+  default_event_weights: "(1.+63428/62998) * weight_mc_NOSYS * weight_pileup_NOSYS * weight_jvt_effSF_NOSYS * weight_ftag_effSF_DL1dv01_Continuous_NOSYS * globalTriggerEffSF_NOSYS * weight_leptonSF_tight_NOSYS"
+
+  default_reco_tree_name: "reco"
+
+  # path to the file with cross-sections
+  xsection_files: ["/afs/cern.ch/user/k/kebarend/public/tWZ/FastFramesPackage/FastFrames/data/XSection-MC16-13TeV.data"]
+
+  # name of the custom class
+  custom_frame_name: "tWZ4LepClass"
+
+  # automatic systematics?
+  automatic_systematics: True
+  nominal_only: False
+
+  # which objects to create lorentz vectors for
+  #create_tlorentz_vectors_for: ["jet","el","mu"]
+
+  number_of_cpus: 4
+
+  luminosity:
+    mc20a: 36646.7
+    mc20d: 44630.6
+    mc20e: 58791.6
+
+# Embed ML model
+simple_onnx_inference:
+  - name: "NN"
+    model_paths: [
+      "/eos/user/k/kebarend/tWZ_analysis/outputs/NN_test.onnx"
+    ]
+    inputs:
+      "dense_input": [
+        "lo_lep_pt_NOSYS",
+        "lo_lep_eta_NOSYS",
+        "lo_lep_phi_NOSYS",
+        "nlo_lep_pt_NOSYS",
+        "nlo_lep_eta_NOSYS",
+        "nlo_lep_phi_NOSYS",
+        "nnlo_lep_pt_NOSYS",
+        "nnlo_lep_eta_NOSYS",
+        "nnlo_lep_phi_NOSYS",
+        "nnnlo_lep_pt_NOSYS",
+        "nnnlo_lep_eta_NOSYS",
+        "nnnlo_lep_phi_NOSYS",
+        "llll_mass_NOSYS",
+        "llll_pt_NOSYS",
+        "llll_eta_NOSYS",
+        "llll_phi_NOSYS",
+        "lo_bjet_pt_NOSYS",
+        "lo_bjet_eta_NOSYS",
+        "lo_bjet_phi_NOSYS",
+        "lo_zCandidate_pt_NOSYS",
+        "lo_zCandidate_mass_NOSYS",
+        "lo_zCandidate_phi_NOSYS",
+        "lo_zCandidate_eta_NOSYS",
+        "met_met_GeV_NOSYS",
+        "sumZCandidatePt_NOSYS",
+        "sumBjetPt_NOSYS",
+        "HT_NOSYS",
+        "LT_NOSYS",
+        "ST_NOSYS",
+        "SMT_NOSYS",
+        "nJets_NOSYS",
+        "nBjets_NOSYS"
+      ]
+    outputs:
+      "dense_2": ["NN_NOSYS"]
+
+
+# define regions
+regions:
+  - name: "tWZOFSR"
+    selection: >
+      (pass_eeee_NOSYS || pass_eeemu_NOSYS || pass_eemumu_NOSYS || pass_emumumu_NOSYS || pass_mumumumu_NOSYS)
+      && nLeptons_tight_NOSYS == 4
+      && lo_lep_TLV_NOSYS.Pt() > 28
+      && nlo_lep_TLV_NOSYS.Pt() > 18
+      && nnlo_lep_TLV_NOSYS.Pt() > 10
+      && nnnlo_lep_TLV_NOSYS.Pt() > 10
+      && sumOfLeptonCharges_NOSYS == 0
+      && massOSSFFlag_NOSYS == 1.
+      && nZCandidates_NOSYS == 1.
+      && nJets_NOSYS >= 1
+      && nBjets_NOSYS == 1
+      && signalRegionType_NOSYS == 0.      
+
+  - name: "tWZSFSR"
+    selection: >
+      (pass_eeee_NOSYS || pass_eeemu_NOSYS || pass_eemumu_NOSYS || pass_emumumu_NOSYS || pass_mumumumu_NOSYS)
+      && nLeptons_tight_NOSYS == 4
+      && lo_lep_TLV_NOSYS.Pt() > 28
+      && nlo_lep_TLV_NOSYS.Pt() > 18
+      && nnlo_lep_TLV_NOSYS.Pt() > 10
+      && nnnlo_lep_TLV_NOSYS.Pt() > 10
+      && sumOfLeptonCharges_NOSYS == 0
+      && massOSSFFlag_NOSYS == 1.
+      && nZCandidates_NOSYS == 1.
+      && nJets_NOSYS >= 1
+      && nBjets_NOSYS == 1
+      && signalRegionType_NOSYS == 1.
+
+  - name: "tWZLooseSR"
+    selection: >
+      (pass_eeee_NOSYS || pass_eeemu_NOSYS || pass_eemumu_NOSYS || pass_emumumu_NOSYS || pass_mumumumu_NOSYS)
+      && nLeptons_NOSYS == 4
+      && nLeptons_tight_NOSYS == 3
+      && lo_lep_TLV_NOSYS.Pt() > 28
+      && nlo_lep_TLV_NOSYS.Pt() > 18
+      && nnlo_lep_TLV_NOSYS.Pt() > 10
+      && nnnlo_lep_TLV_NOSYS.Pt() > 10
+      && sumOfLeptonCharges_NOSYS == 0
+      && massOSSFFlag_NOSYS == 1.
+      && nZCandidates_NOSYS == 1.
+      && nJets_NOSYS >= 1
+      && nBjets_NOSYS == 1
+
+  - name: "ttZCR"
+    selection: >
+      (pass_eeee_NOSYS || pass_eeemu_NOSYS || pass_eemumu_NOSYS || pass_emumumu_NOSYS || pass_mumumumu_NOSYS)
+      && nLeptons_tight_NOSYS == 4
+      && lo_lep_TLV_NOSYS.Pt() > 28
+      && nlo_lep_TLV_NOSYS.Pt() > 18
+      && nnlo_lep_TLV_NOSYS.Pt() > 10
+      && nnnlo_lep_TLV_NOSYS.Pt() > 10
+      && sumOfLeptonCharges_NOSYS == 0
+      && massOSSFFlag_NOSYS == 1.
+      && nZCandidates_NOSYS == 1.
+      && nJets_NOSYS >= 2.
+      && nBjets_NOSYS == 2.
+
+  - name: "ZZbCR"
+    selection: >
+      (pass_eeee_NOSYS || pass_eeemu_NOSYS || pass_eemumu_NOSYS || pass_emumumu_NOSYS || pass_mumumumu_NOSYS)
+      && nLeptons_tight_NOSYS == 4
+      && lo_lep_TLV_NOSYS.Pt() > 28
+      && nlo_lep_TLV_NOSYS.Pt() > 18
+      && nnlo_lep_TLV_NOSYS.Pt() > 10
+      && nnnlo_lep_TLV_NOSYS.Pt() > 10
+      && sumOfLeptonCharges_NOSYS == 0
+      && massOSSFFlag_NOSYS == 1.
+      && nZCandidates_NOSYS == 2.
+      && nJets_NOSYS >= 1.
+      && nBjets_NOSYS == 1.
+
+# define samples
+samples:
+  - name: "tWZ_DR1"
+    dsids: [525955]
+    campaigns: ["mc20a", "mc20d", "mc20e"]
+    simulation_type: "fastsim"
+  - name: "ttZ_aMCPy8EG"
+    dsids: [504330, 504334, 504342]
+    campaigns: ["mc20a", "mc20d", "mc20e"]
+    simulation_type: "fullsim"
+  - name: "ZZ_Sherpa"
+    dsids: [364250, 364283, 364288, 345706]
+    campaigns: ["mc20a", "mc20d", "mc20e"]
+    simulation_type: "fullsim"
+  - name: "WZ_Sherpa"
+    dsids: [364253, 364284, 364289]
+    campaigns: ["mc20d", "mc20e", "mc20a"]
+    simulation_type: "fullsim"
+
+ntuples:
+  regions: ["${region}"]

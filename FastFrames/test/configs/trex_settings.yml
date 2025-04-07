@@ -1,0 +1,54 @@
+Job:
+  Label: ttZ
+  CmeLabel: 13.6
+  LumiLabel: 35.7
+
+Fit:
+  FitType: "SPLUSB"
+  FitRegion: "CRSR"
+  POIAsimov: 1
+  FitBlind: "True"
+
+samples:
+    - name: "ttbar_FS"
+      Color: 50
+      Title: "t#bar{t}"
+      Type: "Signal"
+
+Systematics:
+    - name: "Luminosity"
+      Title: "Luminosity"
+      Type: "OVERALL"
+      OverallUp: 0.017
+      OverallDown: -0.017
+      Category: "Instrumental"
+
+    - name: "Wjets_xsec"
+      Title: "W+jets cross-section"
+      Type: "OVERALL"
+      OverallUp: 0.1
+      OverallDown: -0.1
+      Samples: "Wjets"
+      Category: "Theoretical"
+
+NormFactors:
+    - name: "mu_signal"
+      Title: "#mu(signal)"
+      Nominal: 1
+      Min: -100
+      Max: 100
+      Samples: "ttbar_FS"
+
+    - name: "N_wjets"
+      Title: "#mu(W+jets)"
+      Nominal: 1
+      Min: -100
+      Max: 100
+      Samples: "Wjets"
+
+
+CustomBlocks:
+  Samples:
+  - name: "wzjets"
+    Title: "WZ+jets"
+    Type: "Background"

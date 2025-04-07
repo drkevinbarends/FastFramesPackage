@@ -1,0 +1,4 @@
+dataset_number/I:physics_short/C:crossSection_pb/D:genFiltEff/D:kFactor/D:relUncertUP/D:relUncertDOWN/D:generator_name/C:etag/C
+410470		PhPy8EG_A14_ttbar_hdamp258p75_nonallhad		729.77		5.437965E-01		1.1426887923592364		0.0		0.0		Powheg+Pythia8(v8.230)+EvtGen(v1.6.0)		e6337
+700341		Sh_2211_Wmunu_maxHTpTV2_BFilter		21806.0		0.0097968		1.0		0.0		0.0		Sherpa		e8351
+

@@ -1,0 +1,589 @@
+
+General block:
+	inputSumWeightsPath:  test/input/sum_of_weights.txt
+	outputPathHistograms:  
+	outputPathNtuples:  
+	inputFilelistPath:  test/input/filelist.txt
+	numCPU:  1
+	customFrameName:  
+	min_event:  -1
+	max_event:  -1
+	--split_n_jobs:  -1
+	--job_index:  -1
+	xSectionFiles:  ['test/data/PMGxsecDB_mc16.txt', 'test/data/PMGxsecDB_mc23.txt']
+	cap_acceptance_selection: True
+	config_define_after_custom_class: False
+	use_region_subfolders: False
+	list_of_systematics_name: listOfSystematics
+	ntuple_compression_level: 1
+	ntuple_auto_flush: 0
+	split_processing_per_unique_samples: False
+	convert_vector_to_rvec:  False
+	luminosity, mc20a:  36646.73828125
+	luminosity, mc20d:  44630.6015625
+	create_tlorentz_vectors_for:
+		 jet
+		 el
+		 mu
+	use_rvec False
+custom_options:
+
+Ntuple block:
+	selection:  
+	samples: [  ]
+	branches: [  ]
+	excluded_branches: [  ]
+	copy_trees:  []
+
+
+Regions block:
+
+	name:  Electron_total
+	selection:  pass_ejets_NOSYS
+	variables:
+		name:  nElectrons
+		title:  histo title;X axis title;Y axis title
+		type:  int
+		definition:  nElectrons_tight_NOSYS
+		is_nominal_only:  False
+		binning:  4 ,  0.0 ,  4.0
+
+
+		name:  nJets
+		title:  Number of jets;Number of jets;Events
+		type:  int
+		definition:  nJets_good_NOSYS
+		is_nominal_only:  False
+		binning:  10 ,  0.0 ,  10.0
+
+
+	name:  Electron_basic
+	selection:  Electron_pass_basic_NOSYS
+	variables:
+		name:  jet1_pt
+		title:  Transverse momentum jet1;p_{T} jet1 [GeV];Events
+		type:  float
+		definition:  jet1_pt_NOSYS
+		is_nominal_only:  False
+		binning:  56 ,  20.0 ,  300.0
+
+
+		name:  jet2_pt
+		title:  Transverse momentum jet2;p_{T} jet2 [GeV];Events
+		type:  float
+		definition:  jet2_pt_NOSYS
+		is_nominal_only:  False
+		binning:  56 ,  20.0 ,  300.0
+
+
+		name:  el_pt
+		title:  Electron transverse momentum; e1 pT [GeV];Events
+		type:  float
+		definition:  el1_pt_NOSYS
+		is_nominal_only:  False
+		binning:  35 ,  25.0 ,  200.0
+
+
+		name:  el_eta
+		title:  Electron pseudorapidity; e1(eta);Events
+		type:  float
+		definition:  el1_eta_NOSYS
+		is_nominal_only:  False
+		binning:  60 ,  -3.0 ,  3.0
+
+
+	name:  Cutflow1_Pass_Ne
+	selection:  ( (nElectrons_tight_NOSYS == 1) )
+	variables:
+		name:  jet1_pt
+		title:  Transverse momentum jet1;p_{T} jet1 [GeV];Events
+		type:  float
+		definition:  jet1_pt_NOSYS
+		is_nominal_only:  False
+		binning:  56 ,  20.0 ,  300.0
+
+
+		name:  jet2_pt
+		title:  Transverse momentum jet2;p_{T} jet2 [GeV];Events
+		type:  float
+		definition:  jet2_pt_NOSYS
+		is_nominal_only:  False
+		binning:  56 ,  20.0 ,  300.0
+
+
+		name:  el_pt
+		title:  Electron transverse momentum; e1 pT [GeV];Events
+		type:  float
+		definition:  el1_pt_NOSYS
+		is_nominal_only:  False
+		binning:  35 ,  25.0 ,  200.0
+
+
+		name:  nElectrons
+		title:  histo title;X axis title;Y axis title
+		type:  int
+		definition:  nElectrons_tight_NOSYS
+		is_nominal_only:  False
+		binning:  4 ,  0.0 ,  4.0
+
+
+		name:  nJets
+		title:  Number of jets;Number of jets;Events
+		type:  int
+		definition:  nJets_good_NOSYS
+		is_nominal_only:  False
+		binning:  10 ,  0.0 ,  10.0
+
+
+	name:  Cutflow1_Pass_Ne_Pass_Nj
+	selection:  ( (nElectrons_tight_NOSYS == 1) && (nJets_good_NOSYS == 4) )
+	variables:
+		name:  jet1_pt
+		title:  Transverse momentum jet1;p_{T} jet1 [GeV];Events
+		type:  float
+		definition:  jet1_pt_NOSYS
+		is_nominal_only:  False
+		binning:  56 ,  20.0 ,  300.0
+
+
+		name:  jet2_pt
+		title:  Transverse momentum jet2;p_{T} jet2 [GeV];Events
+		type:  float
+		definition:  jet2_pt_NOSYS
+		is_nominal_only:  False
+		binning:  56 ,  20.0 ,  300.0
+
+
+		name:  el_pt
+		title:  Electron transverse momentum; e1 pT [GeV];Events
+		type:  float
+		definition:  el1_pt_NOSYS
+		is_nominal_only:  False
+		binning:  35 ,  25.0 ,  200.0
+
+
+		name:  nElectrons
+		title:  histo title;X axis title;Y axis title
+		type:  int
+		definition:  nElectrons_tight_NOSYS
+		is_nominal_only:  False
+		binning:  4 ,  0.0 ,  4.0
+
+
+		name:  nJets
+		title:  Number of jets;Number of jets;Events
+		type:  int
+		definition:  nJets_good_NOSYS
+		is_nominal_only:  False
+		binning:  10 ,  0.0 ,  10.0
+
+
+		name:  el_eta
+		title:  Electron pseudorapidity; e1(eta);Events
+		type:  float
+		definition:  el1_eta_NOSYS
+		is_nominal_only:  False
+		binning:  60 ,  -3.0 ,  3.0
+
+
+	name:  Cutflow1_Pass_Ne_Pass_Nj_Pass_j1pt
+	selection:  ( (nElectrons_tight_NOSYS == 1) && (nJets_good_NOSYS == 4) && (jet1_pt_NOSYS >= 50) )
+	variables:
+		name:  jet1_pt
+		title:  Transverse momentum jet1;p_{T} jet1 [GeV];Events
+		type:  float
+		definition:  jet1_pt_NOSYS
+		is_nominal_only:  False
+		binning:  56 ,  20.0 ,  300.0
+
+
+		name:  jet2_pt
+		title:  Transverse momentum jet2;p_{T} jet2 [GeV];Events
+		type:  float
+		definition:  jet2_pt_NOSYS
+		is_nominal_only:  False
+		binning:  56 ,  20.0 ,  300.0
+
+
+		name:  el_pt
+		title:  Electron transverse momentum; e1 pT [GeV];Events
+		type:  float
+		definition:  el1_pt_NOSYS
+		is_nominal_only:  False
+		binning:  35 ,  25.0 ,  200.0
+
+
+		name:  nJets
+		title:  Number of jets;Number of jets;Events
+		type:  int
+		definition:  nJets_good_NOSYS
+		is_nominal_only:  False
+		binning:  10 ,  0.0 ,  10.0
+
+
+		name:  el_eta
+		title:  Electron pseudorapidity; e1(eta);Events
+		type:  float
+		definition:  el1_eta_NOSYS
+		is_nominal_only:  False
+		binning:  60 ,  -3.0 ,  3.0
+
+
+	name:  Cutflow1_Pass_Ne_Pass_Nj_Pass_j1pt_Pass_ept
+	selection:  ( (nElectrons_tight_NOSYS == 1) && (nJets_good_NOSYS == 4) && (jet1_pt_NOSYS >= 50) && (el1_pt_NOSYS >= 40) )
+	variables:
+		name:  jet1_pt
+		title:  Transverse momentum jet1;p_{T} jet1 [GeV];Events
+		type:  float
+		definition:  jet1_pt_NOSYS
+		is_nominal_only:  False
+		binning:  56 ,  20.0 ,  300.0
+
+
+		name:  jet2_pt
+		title:  Transverse momentum jet2;p_{T} jet2 [GeV];Events
+		type:  float
+		definition:  jet2_pt_NOSYS
+		is_nominal_only:  False
+		binning:  56 ,  20.0 ,  300.0
+
+
+		name:  el_pt
+		title:  Electron transverse momentum; e1 pT [GeV];Events
+		type:  float
+		definition:  el1_pt_NOSYS
+		is_nominal_only:  False
+		binning:  35 ,  25.0 ,  200.0
+
+
+		name:  el_eta
+		title:  Electron pseudorapidity; e1(eta);Events
+		type:  float
+		definition:  el1_eta_NOSYS
+		is_nominal_only:  False
+		binning:  60 ,  -3.0 ,  3.0
+
+
+	name:  Cutflow1_Agnostic_Pass_Ne
+	selection:  ( (nJets_good_NOSYS == 4) && (jet1_pt_NOSYS >= 50) && (el1_pt_NOSYS >= 40) )
+	variables:
+		name:  nElectrons
+		title:  histo title;X axis title;Y axis title
+		type:  int
+		definition:  nElectrons_tight_NOSYS
+		is_nominal_only:  False
+		binning:  4 ,  0.0 ,  4.0
+
+
+	name:  Cutflow1_Agnostic_Pass_Nj
+	selection:  ( (nElectrons_tight_NOSYS == 1) && (jet1_pt_NOSYS >= 50) && (el1_pt_NOSYS >= 40) )
+	variables:
+		name:  nJets
+		title:  Number of jets;Number of jets;Events
+		type:  int
+		definition:  nJets_good_NOSYS
+		is_nominal_only:  False
+		binning:  10 ,  0.0 ,  10.0
+
+
+	name:  Cutflow1_Agnostic_Pass_j1pt
+	selection:  ( (nElectrons_tight_NOSYS == 1) && (nJets_good_NOSYS == 4) && (el1_pt_NOSYS >= 40) )
+	variables:
+		name:  jet1_pt
+		title:  Transverse momentum jet1;p_{T} jet1 [GeV];Events
+		type:  float
+		definition:  jet1_pt_NOSYS
+		is_nominal_only:  False
+		binning:  56 ,  20.0 ,  300.0
+
+
+	name:  Cutflow1_Agnostic_Pass_ept
+	selection:  ( (nElectrons_tight_NOSYS == 1) && (nJets_good_NOSYS == 4) && (jet1_pt_NOSYS >= 50) )
+	variables:
+		name:  el_pt
+		title:  Electron transverse momentum; e1 pT [GeV];Events
+		type:  float
+		definition:  el1_pt_NOSYS
+		is_nominal_only:  False
+		binning:  35 ,  25.0 ,  200.0
+
+
+	name:  Cutflow2_Pass_Ne
+	selection:  ( (nElectrons_tight_NOSYS == 1) )
+	variables:
+		name:  jet1_pt
+		title:  Transverse momentum jet1;p_{T} jet1 [GeV];Events
+		type:  float
+		definition:  jet1_pt_NOSYS
+		is_nominal_only:  False
+		binning:  56 ,  20.0 ,  300.0
+
+
+		name:  jet2_pt
+		title:  Transverse momentum jet2;p_{T} jet2 [GeV];Events
+		type:  float
+		definition:  jet2_pt_NOSYS
+		is_nominal_only:  False
+		binning:  56 ,  20.0 ,  300.0
+
+
+		name:  el_pt
+		title:  Electron transverse momentum; e1 pT [GeV];Events
+		type:  float
+		definition:  el1_pt_NOSYS
+		is_nominal_only:  False
+		binning:  35 ,  25.0 ,  200.0
+
+
+		name:  nElectrons
+		title:  histo title;X axis title;Y axis title
+		type:  int
+		definition:  nElectrons_tight_NOSYS
+		is_nominal_only:  False
+		binning:  4 ,  0.0 ,  4.0
+
+
+		name:  el_eta
+		title:  Electron pseudorapidity; e1(eta);Events
+		type:  float
+		definition:  el1_eta_NOSYS
+		is_nominal_only:  False
+		binning:  60 ,  -3.0 ,  3.0
+
+
+	name:  Cutflow2_Pass_Ne_Pass_j1pt
+	selection:  ( (nElectrons_tight_NOSYS == 1) && (jet1_pt_NOSYS >= 60) )
+	variables:
+		name:  jet1_pt
+		title:  Transverse momentum jet1;p_{T} jet1 [GeV];Events
+		type:  float
+		definition:  jet1_pt_NOSYS
+		is_nominal_only:  False
+		binning:  56 ,  20.0 ,  300.0
+
+
+		name:  jet2_pt
+		title:  Transverse momentum jet2;p_{T} jet2 [GeV];Events
+		type:  float
+		definition:  jet2_pt_NOSYS
+		is_nominal_only:  False
+		binning:  56 ,  20.0 ,  300.0
+
+
+		name:  el_pt
+		title:  Electron transverse momentum; e1 pT [GeV];Events
+		type:  float
+		definition:  el1_pt_NOSYS
+		is_nominal_only:  False
+		binning:  35 ,  25.0 ,  200.0
+
+
+		name:  el_eta
+		title:  Electron pseudorapidity; e1(eta);Events
+		type:  float
+		definition:  el1_eta_NOSYS
+		is_nominal_only:  False
+		binning:  60 ,  -3.0 ,  3.0
+
+
+	name:  Cutflow2_Pass_Ne_Pass_j1pt_Pass_ept
+	selection:  ( (nElectrons_tight_NOSYS == 1) && (jet1_pt_NOSYS >= 60) && (el1_pt_NOSYS >= 35) )
+	variables:
+		name:  jet1_pt
+		title:  Transverse momentum jet1;p_{T} jet1 [GeV];Events
+		type:  float
+		definition:  jet1_pt_NOSYS
+		is_nominal_only:  False
+		binning:  56 ,  20.0 ,  300.0
+
+
+		name:  jet2_pt
+		title:  Transverse momentum jet2;p_{T} jet2 [GeV];Events
+		type:  float
+		definition:  jet2_pt_NOSYS
+		is_nominal_only:  False
+		binning:  56 ,  20.0 ,  300.0
+
+
+		name:  el_pt
+		title:  Electron transverse momentum; e1 pT [GeV];Events
+		type:  float
+		definition:  el1_pt_NOSYS
+		is_nominal_only:  False
+		binning:  35 ,  25.0 ,  200.0
+
+
+		name:  el_eta
+		title:  Electron pseudorapidity; e1(eta);Events
+		type:  float
+		definition:  el1_eta_NOSYS
+		is_nominal_only:  False
+		binning:  60 ,  -3.0 ,  3.0
+
+
+	name:  Cutflow2_Agnostic_Pass_j1pt
+	selection:  ( (nElectrons_tight_NOSYS == 1) && (el1_pt_NOSYS >= 35) )
+	variables:
+		name:  jet1_pt
+		title:  Transverse momentum jet1;p_{T} jet1 [GeV];Events
+		type:  float
+		definition:  jet1_pt_NOSYS
+		is_nominal_only:  False
+		binning:  56 ,  20.0 ,  300.0
+
+
+	name:  Cutflow2_Agnostic_Pass_ept
+	selection:  ( (nElectrons_tight_NOSYS == 1) && (jet1_pt_NOSYS >= 60) )
+	variables:
+		name:  el_pt
+		title:  Electron transverse momentum; e1 pT [GeV];Events
+		type:  float
+		definition:  el1_pt_NOSYS
+		is_nominal_only:  False
+		binning:  35 ,  25.0 ,  200.0
+
+
+
+
+Samples block:
+
+	name:  data_2023
+	regions:  ['Electron_total', 'Electron_basic', 'Cutflow1_Pass_Ne', 'Cutflow1_Pass_Ne_Pass_Nj', 'Cutflow1_Pass_Ne_Pass_Nj_Pass_j1pt', 'Cutflow1_Pass_Ne_Pass_Nj_Pass_j1pt_Pass_ept', 'Cutflow1_Agnostic_Pass_Ne', 'Cutflow1_Agnostic_Pass_Nj', 'Cutflow1_Agnostic_Pass_j1pt', 'Cutflow1_Agnostic_Pass_ept']
+	weight:  1.
+	systematic:  ['NOSYS']
+	selection_suffix: ""
+	reco_to_truth_pairing_indices:  ['runNumber', 'eventNumber']
+	automaticSystematics:  False
+	nominalOnly:  True
+	hasCutflows:  True
+	cutflows:
+		Cutflow1
+		variables_to_track: 
+				- jet1_pt
+				- jet2_pt
+				- el_pt
+				- nElectrons
+				- nJets
+				- el_eta
+		- selection:nElectrons_tight_NOSYS == 1
+		  title:Pass_Ne
+		  associated_variable:nElectrons
+		  variables_to_exclude:
+				- el_eta
+		- selection:nJets_good_NOSYS == 4
+		  title:Pass_Nj
+		  associated_variable:nJets
+		  variables_to_exclude:
+		- selection:jet1_pt_NOSYS >= 50
+		  title:Pass_j1pt
+		  associated_variable:jet1_pt
+		  variables_to_exclude:
+				- nElectrons
+		- selection:el1_pt_NOSYS >= 40
+		  title:Pass_ept
+		  associated_variable:el_pt
+		  variables_to_exclude:
+				- nElectrons
+				- nJets
+	variables:
+		 nElectrons
+		 nJets
+		 jet1_pt
+		 jet2_pt
+		 el_pt
+		 el_eta
+	Unique samples:
+		 (0,2023,data)
+	Systematic uncertainties defined for this sample:
+
+		name:  NOSYS
+		regions:  ['Electron_total', 'Electron_basic', 'Cutflow1_Pass_Ne', 'Cutflow1_Pass_Ne_Pass_Nj', 'Cutflow1_Pass_Ne_Pass_Nj_Pass_j1pt', 'Cutflow1_Pass_Ne_Pass_Nj_Pass_j1pt_Pass_ept', 'Cutflow1_Agnostic_Pass_Ne', 'Cutflow1_Agnostic_Pass_Nj', 'Cutflow1_Agnostic_Pass_j1pt', 'Cutflow1_Agnostic_Pass_ept', 'Cutflow2_Pass_Ne', 'Cutflow2_Pass_Ne_Pass_j1pt', 'Cutflow2_Pass_Ne_Pass_j1pt_Pass_ept', 'Cutflow2_Agnostic_Pass_j1pt', 'Cutflow2_Agnostic_Pass_ept']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+
+
+
+
+	name:  ttbar_singlelep_2023
+	regions:  ['Electron_total', 'Electron_basic', 'Cutflow1_Pass_Ne', 'Cutflow1_Pass_Ne_Pass_Nj', 'Cutflow1_Pass_Ne_Pass_Nj_Pass_j1pt', 'Cutflow1_Pass_Ne_Pass_Nj_Pass_j1pt_Pass_ept', 'Cutflow1_Agnostic_Pass_Ne', 'Cutflow1_Agnostic_Pass_Nj', 'Cutflow1_Agnostic_Pass_j1pt', 'Cutflow1_Agnostic_Pass_ept', 'Cutflow2_Pass_Ne', 'Cutflow2_Pass_Ne_Pass_j1pt', 'Cutflow2_Pass_Ne_Pass_j1pt_Pass_ept', 'Cutflow2_Agnostic_Pass_j1pt', 'Cutflow2_Agnostic_Pass_ept']
+	weight:  weight_mc_NOSYS * globalTriggerEffSF_NOSYS * weight_jvt_effSF_NOSYS * weight_pileup_NOSYS * weight_beamspot * weight_leptonSF_tight_NOSYS
+	systematic:  ['NOSYS']
+	selection_suffix: ""
+	reco_to_truth_pairing_indices:  ['runNumber', 'eventNumber']
+	automaticSystematics:  False
+	nominalOnly:  True
+	hasCutflows:  True
+	cutflows:
+		Cutflow1
+		variables_to_track: 
+				- jet1_pt
+				- jet2_pt
+				- el_pt
+				- nElectrons
+				- nJets
+				- el_eta
+		- selection:nElectrons_tight_NOSYS == 1
+		  title:Pass_Ne
+		  associated_variable:nElectrons
+		  variables_to_exclude:
+				- el_eta
+		- selection:nJets_good_NOSYS == 4
+		  title:Pass_Nj
+		  associated_variable:nJets
+		  variables_to_exclude:
+		- selection:jet1_pt_NOSYS >= 50
+		  title:Pass_j1pt
+		  associated_variable:jet1_pt
+		  variables_to_exclude:
+				- nElectrons
+		- selection:el1_pt_NOSYS >= 40
+		  title:Pass_ept
+		  associated_variable:el_pt
+		  variables_to_exclude:
+				- nElectrons
+				- nJets
+		Cutflow2
+		variables_to_track: 
+				- jet1_pt
+				- jet2_pt
+				- el_pt
+				- nElectrons
+				- el_eta
+		- selection:nElectrons_tight_NOSYS == 1
+		  title:Pass_Ne
+		  associated_variable:
+		  variables_to_exclude:
+		- selection:jet1_pt_NOSYS >= 60
+		  title:Pass_j1pt
+		  associated_variable:jet1_pt
+		  variables_to_exclude:
+				- nElectrons
+		- selection:el1_pt_NOSYS >= 35
+		  title:Pass_ept
+		  associated_variable:el_pt
+		  variables_to_exclude:
+				- nElectrons
+				- nJets
+	variables:
+		 nElectrons
+		 nJets
+		 jet1_pt
+		 jet2_pt
+		 el_pt
+		 el_eta
+	Unique samples:
+		 (601229,mc23d,fullsim)
+	Systematic uncertainties defined for this sample:
+
+		name:  NOSYS
+		regions:  ['Electron_total', 'Electron_basic', 'Cutflow1_Pass_Ne', 'Cutflow1_Pass_Ne_Pass_Nj', 'Cutflow1_Pass_Ne_Pass_Nj_Pass_j1pt', 'Cutflow1_Pass_Ne_Pass_Nj_Pass_j1pt_Pass_ept', 'Cutflow1_Agnostic_Pass_Ne', 'Cutflow1_Agnostic_Pass_Nj', 'Cutflow1_Agnostic_Pass_j1pt', 'Cutflow1_Agnostic_Pass_ept', 'Cutflow2_Pass_Ne', 'Cutflow2_Pass_Ne_Pass_j1pt', 'Cutflow2_Pass_Ne_Pass_j1pt_Pass_ept', 'Cutflow2_Agnostic_Pass_j1pt', 'Cutflow2_Agnostic_Pass_ept']
+		weight_suffix:  
+		sum_weights:  NOSYS
+
+
+
+
+
+

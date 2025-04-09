@@ -8,6 +8,8 @@ FastFrames is a lightweight and efficient framework designed for high-performanc
 - **Modular Design**: Easily extendable and customizable.
 - **User-Friendly**: Simple APIs for quick integration.
 
+For more information, please visit the FastFrames documentation [link](https://atlas-project-topreconstruction.web.cern.ch/fastframesdocumentation/tutorial/)
+
 ## Getting Started
 
 To start using the package, source the `setup.sh` script:

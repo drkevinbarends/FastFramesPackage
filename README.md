@@ -28,6 +28,16 @@ This will apply the final selection cuts for the tWZ analysis over the various S
 
 **Note:** Before running the scripts, ensure that the file paths inside `setup.sh`, `runFastFramesPipeline.sh`, and `runFastFramesTest.sh` are updated to reflect their correct locations on your machine.
 
+## Creating another branch
+
+To create a new branch, first ensure you are on the branch you want to base it on. Then run:
+
+```bash
+git checkout -b <new-branch-name>
+```
+
+Replace `<new-branch-name>` with the desired name for your branch. This will create and switch to the new branch.
+
 ## Compiling Changes
 
 If you make any changes to the `tWZ4LepClass.h` or `tWZ4LepClass.cc` files, you must run the `setup.sh` script in the `tWZ4LepClass` directory to compile and link your changes:

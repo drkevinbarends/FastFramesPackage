@@ -8,6 +8,8 @@ FastFrames is a lightweight and efficient framework designed for high-performanc
 - **Modular Design**: Easily extendable and customizable.
 - **User-Friendly**: Simple APIs for quick integration.
 
+For more information, please visit the FastFrames documentation [link](https://atlas-project-topreconstruction.web.cern.ch/fastframesdocumentation/tutorial/)
+
 ## Getting Started
 
 To start using the package, source the `setup.sh` script:
@@ -27,6 +29,16 @@ source runFastFramesPipeline.sh
 This will apply the final selection cuts for the tWZ analysis over the various Signal and Control regions and store the output in an ntuple.
 
 **Note:** Before running the scripts, ensure that the file paths inside `setup.sh`, `runFastFramesPipeline.sh`, and `runFastFramesTest.sh` are updated to reflect their correct locations on your machine.
+
+## Creating another branch
+
+To create a new branch, first ensure you are on the branch you want to base it on. Then run:
+
+```bash
+git checkout -b <new-branch-name>
+```
+
+Replace `<new-branch-name>` with the desired name for your branch. This will create and switch to the new branch.
 
 ## Compiling Changes
 

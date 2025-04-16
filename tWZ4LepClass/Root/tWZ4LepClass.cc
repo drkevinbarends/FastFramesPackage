@@ -524,40 +524,40 @@ ROOT::RDF::RNode tWZ4LepClass::defineVariables(
 
   /* 
     =====================================================
-        Separate out objects by leading order sequence
+        Separate out objects by leading sequence
     =====================================================
   */
   // Add dummy variable for leadingOrderPosition
   mainNode = MainFrame::systematicStringDefine(
       mainNode,
-      "LOPosition_NOSYS",
+      "Position_0_NOSYS",
       "static_cast<int>(0)"
   );
   mainNode = MainFrame::systematicStringDefine(
       mainNode,
-      "NLOPosition_NOSYS",
+      "Position_1_NOSYS",
       "static_cast<int>(1)"
   );
   mainNode = MainFrame::systematicStringDefine(
       mainNode,
-      "NNLOPosition_NOSYS",
+      "Position_2_NOSYS",
       "static_cast<int>(2)"
   );
   mainNode = MainFrame::systematicStringDefine(
       mainNode,
-      "NNNLOPosition_NOSYS",
+      "Position_3_NOSYS",
       "static_cast<int>(3)"
   );
-  // Function - extract the different leading orders for TLV data type
-  auto extractLeadingOrderTLV = [](
+  // Function - extract the different leading for TLV data type
+  auto extractLeadingPositionTLV = [](
       const std::vector<TLV>& tlv,
-      const int & leadingOrderPosition
+      const int & leadingPosition
   ) {
       const std::size_t size = tlv.size();
-      const std::size_t sizeConstraint = leadingOrderPosition + 1;
+      const std::size_t sizeConstraint = leadingPosition + 1;
 
       TLV result;    
-      if (size >= sizeConstraint) { result = tlv.at(leadingOrderPosition); } 
+      if (size >= sizeConstraint) { result = tlv.at(leadingPosition); } 
       else{ result = TLV{-999, -999, -999, -999}; }
 
       return result;
@@ -565,27 +565,27 @@ ROOT::RDF::RNode tWZ4LepClass::defineVariables(
   // Variables - Leptons
   mainNode = MainFrame::systematicDefine(
       mainNode,
-      "lo_lep_TLV_NOSYS",
-      extractLeadingOrderTLV,
-      {"sorted_lep_TLV_NOSYS","LOPosition_NOSYS"}
+      "lep0_TLV_NOSYS",
+      extractLeadingPositionTLV,
+      {"sorted_lep_TLV_NOSYS","Position_0_NOSYS"}
   );
   mainNode = MainFrame::systematicDefine(
       mainNode,
-      "nlo_lep_TLV_NOSYS",
-      extractLeadingOrderTLV,
-      {"sorted_lep_TLV_NOSYS","NLOPosition_NOSYS"}
+      "lep1_TLV_NOSYS",
+      extractLeadingPositionTLV,
+      {"sorted_lep_TLV_NOSYS","Position_1_NOSYS"}
   );
   mainNode = MainFrame::systematicDefine(
       mainNode,
-      "nnlo_lep_TLV_NOSYS",
-      extractLeadingOrderTLV,
-      {"sorted_lep_TLV_NOSYS","NNLOPosition_NOSYS"}
+      "lep2_TLV_NOSYS",
+      extractLeadingPositionTLV,
+      {"sorted_lep_TLV_NOSYS","Position_2_NOSYS"}
   );
   mainNode = MainFrame::systematicDefine(
       mainNode,
-      "nnnlo_lep_TLV_NOSYS",
-      extractLeadingOrderTLV,
-      {"sorted_lep_TLV_NOSYS","NNNLOPosition_NOSYS"}
+      "lep3_TLV_NOSYS",
+      extractLeadingPositionTLV,
+      {"sorted_lep_TLV_NOSYS","Position_3_NOSYS"}
   );
 
   /* 
@@ -724,7 +724,7 @@ ROOT::RDF::RNode tWZ4LepClass::defineVariables(
   // Variable - Z Candidates
   mainNode = MainFrame::systematicDefine(
       mainNode,
-      "zCandidateFlag_NOSYS",
+      "ZCandidateFlag_NOSYS",
       zCandidatesFlag,
       {"massOSSF_NOSYS"}
   );
@@ -760,9 +760,9 @@ ROOT::RDF::RNode tWZ4LepClass::defineVariables(
   // Variable s - Z Candidates
   mainNode = MainFrame::systematicDefine(
       mainNode,
-      "zCandidate_TLV_NOSYS",
+      "ZCandidate_TLV_NOSYS",
       createZCandidate4Vector,
-      {"sorted_lep_TLV_NOSYS","massOSSF_NOSYS","zCandidateFlag_NOSYS"}
+      {"sorted_lep_TLV_NOSYS","massOSSF_NOSYS","ZCandidateFlag_NOSYS"}
   );
   // Function 
   auto sortByPt = [](
@@ -782,9 +782,9 @@ ROOT::RDF::RNode tWZ4LepClass::defineVariables(
   // Variable - Z Candidates
   mainNode = MainFrame::systematicDefine(
       mainNode,
-      "sorted_zCandidate_TLV_NOSYS",
+      "sorted_ZCandidate_TLV_NOSYS",
       sortByPt,
-      {"zCandidate_TLV_NOSYS"}
+      {"ZCandidate_TLV_NOSYS"}
   );
 
   /* 
@@ -812,7 +812,7 @@ ROOT::RDF::RNode tWZ4LepClass::defineVariables(
       mainNode,
       "nZCandidates_NOSYS",
       nZCandidates,
-      {"zCandidateFlag_NOSYS"}
+      {"ZCandidateFlag_NOSYS"}
   );
 
   /* 
@@ -854,7 +854,7 @@ ROOT::RDF::RNode tWZ4LepClass::defineVariables(
       mainNode,
       "signalRegionType_NOSYS",
       signalRegionType,
-      {"zCandidateFlag_NOSYS","sorted_lep_pdgID_NOSYS"}
+      {"ZCandidateFlag_NOSYS","sorted_lep_pdgID_NOSYS"}
   );
 
   /*
@@ -902,7 +902,7 @@ ROOT::RDF::RNode tWZ4LepClass::defineVariables(
       mainNode,
       "sumZCandidatePt_NOSYS",
       calculateScalarSumOfPt,
-      {"sorted_zCandidate_TLV_NOSYS"}
+      {"sorted_ZCandidate_TLV_NOSYS"}
   );
 
   /*
@@ -977,16 +977,16 @@ ROOT::RDF::RNode tWZ4LepClass::defineVariables(
       Variables split into LO | NLO | NNLO | NNNLO 
     ===============================================================
   */
-  // Function - extract the different leading orders for float data type
-  auto extractLeadingOrderPt = [](
+  // Function - extract the different leading for float data type
+  auto extractLeadingPositionPt = [](
       const std::vector<TLV>& tlv,
-      const int & leadingOrderPosition
+      const int & leadingPosition
   ) {
       const int size = tlv.size();
-      const int sizeConstraint = leadingOrderPosition + 1;
+      const int sizeConstraint = leadingPosition + 1;
 
       float result;    
-      if (size >= sizeConstraint) { result = tlv.at(leadingOrderPosition).Pt(); } 
+      if (size >= sizeConstraint) { result = tlv.at(leadingPosition).Pt(); } 
       else{ result = -999.; }
 
       return result;
@@ -994,83 +994,83 @@ ROOT::RDF::RNode tWZ4LepClass::defineVariables(
   // Variables - Leptons
   mainNode = MainFrame::systematicDefine(
       mainNode,
-      "lo_lep_pt_NOSYS",
-      extractLeadingOrderPt,
-      {"sorted_lep_TLV_NOSYS","LOPosition_NOSYS"}
+      "lep0_pt_NOSYS",
+      extractLeadingPositionPt,
+      {"sorted_lep_TLV_NOSYS","Position_0_NOSYS"}
   );
   mainNode = MainFrame::systematicDefine(
       mainNode,
-      "nlo_lep_pt_NOSYS",
-      extractLeadingOrderPt,
-      {"sorted_lep_TLV_NOSYS","NLOPosition_NOSYS"}
+      "lep1_pt_NOSYS",
+      extractLeadingPositionPt,
+      {"sorted_lep_TLV_NOSYS","Position_1_NOSYS"}
   );
   mainNode = MainFrame::systematicDefine(
       mainNode,
-      "nnlo_lep_pt_NOSYS",
-      extractLeadingOrderPt,
-      {"sorted_lep_TLV_NOSYS","NNLOPosition_NOSYS"}
+      "lep2_pt_NOSYS",
+      extractLeadingPositionPt,
+      {"sorted_lep_TLV_NOSYS","Position_2_NOSYS"}
   );
   mainNode = MainFrame::systematicDefine(
       mainNode,
-      "nnnlo_lep_pt_NOSYS",
-      extractLeadingOrderPt,
-      {"sorted_lep_TLV_NOSYS","NNNLOPosition_NOSYS"}
+      "lep3_pt_NOSYS",
+      extractLeadingPositionPt,
+      {"sorted_lep_TLV_NOSYS","Position_3_NOSYS"}
   );
   // Bjets
   mainNode = MainFrame::systematicDefine(
     mainNode,
-    "lo_bjet_pt_NOSYS",
-    extractLeadingOrderPt,
-    {"sorted_bjet_TLV_NOSYS","LOPosition_NOSYS"}
+    "bjet0_pt_NOSYS",
+    extractLeadingPositionPt,
+    {"sorted_bjet_TLV_NOSYS","Position_0_NOSYS"}
   );
   mainNode = MainFrame::systematicDefine(
       mainNode,
-      "nlo_bjet_pt_NOSYS",
-      extractLeadingOrderPt,
-      {"sorted_bjet_TLV_NOSYS","NLOPosition_NOSYS"}
+      "bjet1_pt_NOSYS",
+      extractLeadingPositionPt,
+      {"sorted_bjet_TLV_NOSYS","Position_1_NOSYS"}
   );
   // Non-Bjets
   mainNode = MainFrame::systematicDefine(
     mainNode,
-    "lo_nonBjet_pt_NOSYS",
-    extractLeadingOrderPt,
-    {"sorted_nonBjet_TLV_NOSYS","LOPosition_NOSYS"}
+    "nonBjet0_pt_NOSYS",
+    extractLeadingPositionPt,
+    {"sorted_nonBjet_TLV_NOSYS","Position_0_NOSYS"}
   );
   mainNode = MainFrame::systematicDefine(
       mainNode,
-      "nlo_nonBjet_pt_NOSYS",
-      extractLeadingOrderPt,
-      {"sorted_nonBjet_TLV_NOSYS","NLOPosition_NOSYS"}
+      "nonBjet1_pt_NOSYS",
+      extractLeadingPositionPt,
+      {"sorted_nonBjet_TLV_NOSYS","Position_1_NOSYS"}
   );
   mainNode = MainFrame::systematicDefine(
       mainNode,
-      "nnlo_nonBjet_pt_NOSYS",
-      extractLeadingOrderPt,
-      {"sorted_nonBjet_TLV_NOSYS","NLOPosition_NOSYS"}
+      "nonBjet2_pt_NOSYS",
+      extractLeadingPositionPt,
+      {"sorted_nonBjet_TLV_NOSYS","Position_2_NOSYS"}
   );
   // Z Candidates
   mainNode = MainFrame::systematicDefine(
       mainNode,
-      "lo_zCandidate_pt_NOSYS",
-      extractLeadingOrderPt,
-      {"sorted_zCandidate_TLV_NOSYS","LOPosition_NOSYS"}
+      "ZCandidate0_pt_NOSYS",
+      extractLeadingPositionPt,
+      {"sorted_ZCandidate_TLV_NOSYS","Position_0_NOSYS"}
   );
   mainNode = MainFrame::systematicDefine(
       mainNode,
-      "nlo_zCandidate_pt_NOSYS",
-      extractLeadingOrderPt,
-      {"sorted_zCandidate_TLV_NOSYS","NLOPosition_NOSYS"}
+      "ZCandidate1_pt_NOSYS",
+      extractLeadingPositionPt,
+      {"sorted_ZCandidate_TLV_NOSYS","Position_1_NOSYS"}
   );
   // Function - extract the different leading orders for float data type
-  auto extractLeadingOrderEta = [](
+  auto extractLeadingPositionEta = [](
       const std::vector<TLV>& tlv,
-      const int & leadingOrderPosition
+      const int & leadingPosition
   ) {
       const int size = tlv.size();
-      const int sizeConstraint = leadingOrderPosition + 1;
+      const int sizeConstraint = leadingPosition + 1;
 
       float result;    
-      if (size >= sizeConstraint) { result = tlv.at(leadingOrderPosition).Eta(); } 
+      if (size >= sizeConstraint) { result = tlv.at(leadingPosition).Eta(); } 
       else{ result = -999.; }
 
       return result;
@@ -1079,83 +1079,83 @@ ROOT::RDF::RNode tWZ4LepClass::defineVariables(
   // Leptons
   mainNode = MainFrame::systematicDefine(
       mainNode,
-      "lo_lep_eta_NOSYS",
-      extractLeadingOrderEta,
-      {"sorted_lep_TLV_NOSYS","LOPosition_NOSYS"}
+      "lep0_eta_NOSYS",
+      extractLeadingPositionEta,
+      {"sorted_lep_TLV_NOSYS","Position_0_NOSYS"}
   );
   mainNode = MainFrame::systematicDefine(
       mainNode,
-      "nlo_lep_eta_NOSYS",
-      extractLeadingOrderEta,
-      {"sorted_lep_TLV_NOSYS","NLOPosition_NOSYS"}
+      "lep1_eta_NOSYS",
+      extractLeadingPositionEta,
+      {"sorted_lep_TLV_NOSYS","Position_1_NOSYS"}
   );
   mainNode = MainFrame::systematicDefine(
       mainNode,
-      "nnlo_lep_eta_NOSYS",
-      extractLeadingOrderEta,
-      {"sorted_lep_TLV_NOSYS","NNLOPosition_NOSYS"}
+      "lep2_eta_NOSYS",
+      extractLeadingPositionEta,
+      {"sorted_lep_TLV_NOSYS","Position_2_NOSYS"}
   );
   mainNode = MainFrame::systematicDefine(
       mainNode,
-      "nnnlo_lep_eta_NOSYS",
-      extractLeadingOrderEta,
-      {"sorted_lep_TLV_NOSYS","NNNLOPosition_NOSYS"}
+      "lep3_eta_NOSYS",
+      extractLeadingPositionEta,
+      {"sorted_lep_TLV_NOSYS","Position_3_NOSYS"}
   );
   // Bjets
   mainNode = MainFrame::systematicDefine(
       mainNode,
-      "lo_bjet_eta_NOSYS",
-      extractLeadingOrderEta,
-      {"sorted_bjet_TLV_NOSYS","LOPosition_NOSYS"}
+      "bjet0_eta_NOSYS",
+      extractLeadingPositionEta,
+      {"sorted_bjet_TLV_NOSYS","Position_0_NOSYS"}
   );
   mainNode = MainFrame::systematicDefine(
       mainNode,
-      "nlo_bjet_eta_NOSYS",
-      extractLeadingOrderEta,
-      {"sorted_bjet_TLV_NOSYS","NLOPosition_NOSYS"}
+      "bjet1_eta_NOSYS",
+      extractLeadingPositionEta,
+      {"sorted_bjet_TLV_NOSYS","Position_1_NOSYS"}
   );
   // Non-Bjets
   mainNode = MainFrame::systematicDefine(
     mainNode,
-    "lo_nonBjet_eta_NOSYS",
-    extractLeadingOrderEta,
-    {"sorted_nonBjet_TLV_NOSYS","LOPosition_NOSYS"}
+    "nonBjet0_eta_NOSYS",
+    extractLeadingPositionEta,
+    {"sorted_nonBjet_TLV_NOSYS","Position_0_NOSYS"}
   );
   mainNode = MainFrame::systematicDefine(
       mainNode,
-      "nlo_nonBjet_eta_NOSYS",
-      extractLeadingOrderEta,
-      {"sorted_nonBjet_TLV_NOSYS","NLOPosition_NOSYS"}
+      "nonBjet1_eta_NOSYS",
+      extractLeadingPositionEta,
+      {"sorted_nonBjet_TLV_NOSYS","Position_1_NOSYS"}
   );
   mainNode = MainFrame::systematicDefine(
       mainNode,
-      "nnlo_nonBjet_eta_NOSYS",
-      extractLeadingOrderEta,
-      {"sorted_nonBjet_TLV_NOSYS","NLOPosition_NOSYS"}
+      "nonBjet2_eta_NOSYS",
+      extractLeadingPositionEta,
+      {"sorted_nonBjet_TLV_NOSYS","Position_2_NOSYS"}
   );
   // Z Candidates
   mainNode = MainFrame::systematicDefine(
       mainNode,
-      "lo_zCandidate_eta_NOSYS",
-      extractLeadingOrderEta,
-      {"sorted_zCandidate_TLV_NOSYS","LOPosition_NOSYS"}
+      "ZCandidate0_eta_NOSYS",
+      extractLeadingPositionEta,
+      {"sorted_ZCandidate_TLV_NOSYS","Position_0_NOSYS"}
   );
   mainNode = MainFrame::systematicDefine(
       mainNode,
-      "nlo_zCandidate_eta_NOSYS",
-      extractLeadingOrderEta,
-      {"sorted_zCandidate_TLV_NOSYS","NLOPosition_NOSYS"}
+      "ZCandidate1_eta_NOSYS",
+      extractLeadingPositionEta,
+      {"sorted_ZCandidate_TLV_NOSYS","Position_1_NOSYS"}
   );
   // Function - extract the different leading orders for float data type
-  auto extractLeadingOrderPhi = [](
+  auto extractLeadingPositionPhi = [](
       const std::vector<TLV>& tlv,
-      const int & leadingOrderPosition
+      const int & leadingPosition
   ) {
       const int size = tlv.size();
-      const int sizeConstraint = leadingOrderPosition + 1;
+      const int sizeConstraint = leadingPosition + 1;
 
       float result;    
-      if (size >= sizeConstraint) { result = tlv.at(leadingOrderPosition).Phi(); } 
+      if (size >= sizeConstraint) { result = tlv.at(leadingPosition).Phi(); } 
       else{ result = -999.; }
 
       return result;
@@ -1164,83 +1164,83 @@ ROOT::RDF::RNode tWZ4LepClass::defineVariables(
   // Leptons
   mainNode = MainFrame::systematicDefine(
       mainNode,
-      "lo_lep_phi_NOSYS",
-      extractLeadingOrderPhi,
-      {"sorted_lep_TLV_NOSYS","LOPosition_NOSYS"}
+      "lep0_phi_NOSYS",
+      extractLeadingPositionPhi,
+      {"sorted_lep_TLV_NOSYS","Position_0_NOSYS"}
   );
   mainNode = MainFrame::systematicDefine(
       mainNode,
-      "nlo_lep_phi_NOSYS",
-      extractLeadingOrderPhi,
-      {"sorted_lep_TLV_NOSYS","NLOPosition_NOSYS"}
+      "lep1_phi_NOSYS",
+      extractLeadingPositionPhi,
+      {"sorted_lep_TLV_NOSYS","Position_1_NOSYS"}
   );
   mainNode = MainFrame::systematicDefine(
       mainNode,
-      "nnlo_lep_phi_NOSYS",
-      extractLeadingOrderPhi,
-      {"sorted_lep_TLV_NOSYS","NNLOPosition_NOSYS"}
+      "lep2_phi_NOSYS",
+      extractLeadingPositionPhi,
+      {"sorted_lep_TLV_NOSYS","Position_2_NOSYS"}
   );
   mainNode = MainFrame::systematicDefine(
       mainNode,
-      "nnnlo_lep_phi_NOSYS",
-      extractLeadingOrderPhi,
-      {"sorted_lep_TLV_NOSYS","NNNLOPosition_NOSYS"}
+      "lep3_phi_NOSYS",
+      extractLeadingPositionPhi,
+      {"sorted_lep_TLV_NOSYS","Position_3_NOSYS"}
   );
   // Bjets
   mainNode = MainFrame::systematicDefine(
       mainNode,
-      "lo_bjet_phi_NOSYS",
-      extractLeadingOrderPhi,
-      {"sorted_bjet_TLV_NOSYS","LOPosition_NOSYS"}
+      "bjet0_phi_NOSYS",
+      extractLeadingPositionPhi,
+      {"sorted_bjet_TLV_NOSYS","Position_0_NOSYS"}
   );
   mainNode = MainFrame::systematicDefine(
       mainNode,
-      "nlo_bjet_phi_NOSYS",
-      extractLeadingOrderPhi,
-      {"sorted_bjet_TLV_NOSYS","NLOPosition_NOSYS"}
+      "bjet1_phi_NOSYS",
+      extractLeadingPositionPhi,
+      {"sorted_bjet_TLV_NOSYS","Position_1_NOSYS"}
   );
   // Non-Bjets
   mainNode = MainFrame::systematicDefine(
     mainNode,
-    "lo_nonBjet_phi_NOSYS",
-    extractLeadingOrderPhi,
-    {"sorted_nonBjet_TLV_NOSYS","LOPosition_NOSYS"}
+    "nonBjet0_phi_NOSYS",
+    extractLeadingPositionPhi,
+    {"sorted_nonBjet_TLV_NOSYS","Position_0_NOSYS"}
   );
   mainNode = MainFrame::systematicDefine(
       mainNode,
-      "nlo_nonBjet_phi_NOSYS",
-      extractLeadingOrderPhi,
-      {"sorted_nonBjet_TLV_NOSYS","NLOPosition_NOSYS"}
+      "nonBjet1_phi_NOSYS",
+      extractLeadingPositionPhi,
+      {"sorted_nonBjet_TLV_NOSYS","Position_1_NOSYS"}
   );
   mainNode = MainFrame::systematicDefine(
       mainNode,
-      "nnlo_nonBjet_phi_NOSYS",
-      extractLeadingOrderPhi,
-      {"sorted_nonBjet_TLV_NOSYS","NLOPosition_NOSYS"}
+      "nonBjet2_phi_NOSYS",
+      extractLeadingPositionPhi,
+      {"sorted_nonBjet_TLV_NOSYS","Position_2_NOSYS"}
   );
   // Z Candidates
   mainNode = MainFrame::systematicDefine(
       mainNode,
-      "lo_zCandidate_phi_NOSYS",
-      extractLeadingOrderPhi,
-      {"sorted_zCandidate_TLV_NOSYS","LOPosition_NOSYS"}
+      "ZCandidate0_phi_NOSYS",
+      extractLeadingPositionPhi,
+      {"sorted_ZCandidate_TLV_NOSYS","Position_0_NOSYS"}
   );
   mainNode = MainFrame::systematicDefine(
       mainNode,
-      "nlo_zCandidate_phi_NOSYS",
-      extractLeadingOrderPhi,
-      {"sorted_zCandidate_TLV_NOSYS","NLOPosition_NOSYS"}
+      "ZCandidate1_phi_NOSYS",
+      extractLeadingPositionPhi,
+      {"sorted_ZCandidate_TLV_NOSYS","Position_1_NOSYS"}
   );
   // Function - extract the different leading orders for float data type
-  auto extractLeadingOrderMass = [](
+  auto extractLeadingPositionMass = [](
       const std::vector<TLV>& tlv,
-      const int & leadingOrderPosition
+      const int & leadingPosition
   ) {
       const int size = tlv.size();
-      const int sizeConstraint = leadingOrderPosition + 1;
+      const int sizeConstraint = leadingPosition + 1;
 
       float result;    
-      if (size >= sizeConstraint) { result = tlv.at(leadingOrderPosition).M(); } 
+      if (size >= sizeConstraint) { result = tlv.at(leadingPosition).M(); } 
       else{ result = -999.; }
 
       return result;
@@ -1248,15 +1248,15 @@ ROOT::RDF::RNode tWZ4LepClass::defineVariables(
   // Variables - Z Candidates
   mainNode = MainFrame::systematicDefine(
       mainNode,
-      "lo_zCandidate_mass_NOSYS",
-      extractLeadingOrderMass,
-      {"sorted_zCandidate_TLV_NOSYS","LOPosition_NOSYS"}
+      "ZCandidate0_mass_NOSYS",
+      extractLeadingPositionMass,
+      {"sorted_ZCandidate_TLV_NOSYS","Position_0_NOSYS"}
   );
   mainNode = MainFrame::systematicDefine(
       mainNode,
-      "nlo_zCandidate_mass_NOSYS",
-      extractLeadingOrderMass,
-      {"sorted_zCandidate_TLV_NOSYS","NLOPosition_NOSYS"}
+      "ZCandidate1_mass_NOSYS",
+      extractLeadingPositionMass,
+      {"sorted_ZCandidate_TLV_NOSYS","Position_1_NOSYS"}
   );
   /*
     ===============================================================
@@ -1264,7 +1264,7 @@ ROOT::RDF::RNode tWZ4LepClass::defineVariables(
     ===============================================================
   */
   // Function
-  auto combineAllLeptons = [](
+  auto combineTLV = [](
       const std::vector<TLV>& tlv
   ) {
       const int size = tlv.size();
@@ -1280,7 +1280,7 @@ ROOT::RDF::RNode tWZ4LepClass::defineVariables(
   mainNode = MainFrame::systematicDefine(
       mainNode,
       "llll_TLV_NOSYS",
-      combineAllLeptons,
+      combineTLV,
       {"sorted_lep_TLV_NOSYS"}
   );
   mainNode = MainFrame::systematicStringDefine(
@@ -1312,40 +1312,40 @@ ROOT::RDF::RNode tWZ4LepClass::defineVariables(
   // 4Lepton + Leading order Bjet
   mainNode = MainFrame::systematicStringDefine(
       mainNode,
-      "llll_loBjet_TLV_NOSYS",
+      "llll_Bjet0_TLV_NOSYS",
       "static_cast<ROOT::Math::PtEtaPhiEVector>((llll_TLV_NOSYS + sorted_bjet_TLV_NOSYS.at(0)))"
   );
   mainNode = MainFrame::systematicStringDefine(
       mainNode,
-      "llll_loBjet_pt_NOSYS",
+      "llll_Bjet0_pt_NOSYS",
       "static_cast<float>((llll_TLV_NOSYS + sorted_bjet_TLV_NOSYS.at(0)).Pt())"
   );
   mainNode = MainFrame::systematicStringDefine(
       mainNode,
-      "llll_loBjet_eta_NOSYS",
+      "llll_Bjet0_eta_NOSYS",
       "static_cast<float>((llll_TLV_NOSYS + sorted_bjet_TLV_NOSYS.at(0)).Eta())"
   );
   mainNode = MainFrame::systematicStringDefine(
       mainNode,
-      "llll_loBjet_mass_NOSYS",
+      "llll_Bjet0_mass_NOSYS",
       "static_cast<float>((llll_TLV_NOSYS + sorted_bjet_TLV_NOSYS.at(0)).M())"
   );
   mainNode = MainFrame::systematicStringDefine(
       mainNode,
-      "deltaPt_llll_loBjet_NOSYS",
+      "deltaPt_llll_Bjet0_NOSYS",
       "static_cast<float>(std::abs(llll_TLV_NOSYS.Pt() - sorted_bjet_TLV_NOSYS.at(0).Pt()))"
   );
-  // Leading order Z Candidate + 4Lepton & Leading Order Bjet system
+  // Leading Z Candidate + 4Lepton & Leading Bjet system
   mainNode = MainFrame::systematicStringDefine(
       mainNode,
-      "deltaPhi_loZCandidate_llllloBjet_NOSYS",
-      "static_cast<float>(std::abs(llll_loBjet_TLV_NOSYS.Phi() - lo_zCandidate_phi_NOSYS))"
+      "deltaPhi_ZCandidate0_llllBjet0_NOSYS",
+      "static_cast<float>(std::abs(llll_Bjet0_TLV_NOSYS.Phi() - ZCandidate0_phi_NOSYS))"
   );
-  // MET + 4Lepton & Leading Order Bjet system
+  // MET + 4Lepton & Leading Bjet system
   mainNode = MainFrame::systematicStringDefine(
       mainNode,
-      "llllloBjet_MET_pt_NOSYS",
-      "static_cast<float>(llll_loBjet_TLV_NOSYS.Pt() + met_met_GeV_NOSYS)"
+      "llllBjet0_MET_pt_NOSYS",
+      "static_cast<float>(llll_Bjet0_TLV_NOSYS.Pt() + met_met_GeV_NOSYS)"
   );
   // MET + 4Lepton system
   mainNode = MainFrame::systematicStringDefine(
@@ -1364,261 +1364,243 @@ ROOT::RDF::RNode tWZ4LepClass::defineVariables(
       "l_l_l_l_MET_pt_NOSYS",
       "static_cast<float>(LT_NOSYS + met_met_GeV_NOSYS)"
   );
-  // Leptons + MET + Leading Order Bjet
+  // Leptons + MET + Leading Bjet
   mainNode = MainFrame::systematicStringDefine(
       mainNode,
-      "l_l_l_l_MET_loBjet_pt_NOSYS",
+      "l_l_l_l_MET_Bjet0_pt_NOSYS",
       "static_cast<float>(LT_NOSYS + met_met_GeV_NOSYS + sorted_bjet_TLV_NOSYS.at(0).Pt())"
   );
-  // MET + Leading Order Bjet
+  // MET + Leading Bjet
   mainNode = MainFrame::systematicStringDefine(
       mainNode,
-      "MET_loBjet_pt_NOSYS",
+      "MET_Bjet0_pt_NOSYS",
       "static_cast<float>(met_met_GeV_NOSYS + sorted_bjet_TLV_NOSYS.at(0).Pt())"
   );
   mainNode = MainFrame::systematicStringDefine(
       mainNode,
-      "MET_loBjet_mass_NOSYS",
+      "MET_Bjet0_mass_NOSYS",
       "static_cast<float>(met_met_GeV_NOSYS + sorted_bjet_TLV_NOSYS.at(0).M())"
   );
 
 
   /*
     ===============================================================
-      Calculate the Scalar sum of pt from Jets, Leptons and MET
+      Combine all leptons and all jets
     ===============================================================
   */
+  // Function
+  auto combineTwoTLVs = [](
+      const std::vector<TLV>& lep_tlv,
+      const std::vector<TLV>& jet_tlv
+  ) {
+      const int lep_size = lep_tlv.size();
+      const int jet_size = jet_tlv.size();
+
+      TLV result;
+      for (int i=0; i<lep_size; i++) {
+        result += lep_tlv.at(i);
+      }
+      for (int j=0; j<jet_size; j++) {
+        result += jet_tlv.at(j);
+      }
+
+      return result;
+  };
+  // Variables - Leptons & Jets
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "allLep_allJet_Sys_TLV_NOSYS",
+      combineTwoTLVs,
+      {"sorted_lep_TLV_NOSYS","sorted_jet_TLV_NOSYS"}
+  );
+  mainNode = MainFrame::systematicStringDefine(
+      mainNode,
+      "allLep_allJet_Sys_pt_NOSYS",
+      "static_cast<float>(allLep_allJet_Sys_TLV_NOSYS.Pt())"
+  );
+  mainNode = MainFrame::systematicStringDefine(
+      mainNode,
+      "allLep_allJet_Sys_eta_NOSYS",
+      "static_cast<float>(allLep_allJet_Sys_TLV_NOSYS.Eta())"
+  );
+  mainNode = MainFrame::systematicStringDefine(
+      mainNode,
+      "allLep_allJet_Sys_phi_NOSYS",
+      "static_cast<float>(allLep_allJet_Sys_TLV_NOSYS.Phi())"
+  );
+  mainNode = MainFrame::systematicStringDefine(
+      mainNode,
+      "allLep_allJet_Sys_mass_NOSYS",
+      "static_cast<float>(allLep_allJet_Sys_TLV_NOSYS.M())"
+  );
 
   /*
     ===============================================================
-      Calculate the Scalar sum of pt from Jets, Leptons and MET
+      Combine all jets
     ===============================================================
   */
+  //Variable - Jets
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "allJets_Sys_TLV_NOSYS",
+      combineTLV,
+      {"sorted_jet_TLV_NOSYS"}
+  );
+  mainNode = MainFrame::systematicStringDefine(
+      mainNode,
+      "allJets_Sys_pt_NOSYS",
+      "static_cast<float>(allJets_Sys_TLV_NOSYS.Pt())"
+  );
+  mainNode = MainFrame::systematicStringDefine(
+      mainNode,
+      "allJets_Sys_eta_NOSYS",
+      "static_cast<float>(allJets_Sys_TLV_NOSYS.Eta())"
+  );
+  mainNode = MainFrame::systematicStringDefine(
+      mainNode,
+      "allJets_Sys_phi_NOSYS",
+      "static_cast<float>(allJets_Sys_TLV_NOSYS.Phi())"
+  );
+  mainNode = MainFrame::systematicStringDefine(
+      mainNode,
+      "allJets_Sys_mass_NOSYS",
+      "static_cast<float>(allJets_Sys_TLV_NOSYS.M())"
+  );
 
   /*
     ===============================================================
-      Calculate the Scalar sum of pt from Jets, Leptons and MET
+      Combine all Bjets
     ===============================================================
   */
+  //Variable - Bjets
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "allBjets_Sys_TLV_NOSYS",
+      combineTLV,
+      {"sorted_bjet_TLV_NOSYS"}
+  );
+  mainNode = MainFrame::systematicStringDefine(
+      mainNode,
+      "allBjets_Sys_pt_NOSYS",
+      "static_cast<float>(allBjets_Sys_TLV_NOSYS.Pt())"
+  );
+  mainNode = MainFrame::systematicStringDefine(
+      mainNode,
+      "allBjets_Sys_eta_NOSYS",
+      "static_cast<float>(allBjets_Sys_TLV_NOSYS.Eta())"
+  );
+  mainNode = MainFrame::systematicStringDefine(
+      mainNode,
+      "allBjets_Sys_phi_NOSYS",
+      "static_cast<float>(allBjets_Sys_TLV_NOSYS.Phi())"
+  );
+  mainNode = MainFrame::systematicStringDefine(
+      mainNode,
+      "allBjets_Sys_mass_NOSYS",
+      "static_cast<float>(allBjets_Sys_TLV_NOSYS.M())"
+  );
 
   /*
     ===============================================================
-      Calculate the Scalar sum of pt from Jets, Leptons and MET
+      Combine all leptons and all bjets
     ===============================================================
   */
+  //Variable - Leptons & Bjets
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "allLep_allBjets_Sys_TLV_NOSYS",
+      combineTwoTLVs,
+      {"sorted_lep_TLV_NOSYS","sorted_bjet_TLV_NOSYS"}
+  );
+  mainNode = MainFrame::systematicStringDefine(
+      mainNode,
+      "allLep_allBjets_Sys_pt_NOSYS",
+      "static_cast<float>(allLep_allBjets_Sys_TLV_NOSYS.Pt())"
+  );
+  mainNode = MainFrame::systematicStringDefine(
+      mainNode,
+      "allLep_allBjets_Sys_eta_NOSYS",
+      "static_cast<float>(allLep_allBjets_Sys_TLV_NOSYS.Eta())"
+  );
+  mainNode = MainFrame::systematicStringDefine(
+      mainNode,
+      "allLep_allBjets_Sys_phi_NOSYS",
+      "static_cast<float>(allLep_allBjets_Sys_TLV_NOSYS.Phi())"
+  );
+  mainNode = MainFrame::systematicStringDefine(
+      mainNode,
+      "allLep_allBjets_Sys_mass_NOSYS",
+      "static_cast<float>(allLep_allBjets_Sys_TLV_NOSYS.M())"
+  );
+
   /*
     ===============================================================
-      Calculate the Scalar sum of pt from Jets, Leptons and MET
-    ===============================================================
-  *//*
-    ===============================================================
-      Calculate the Scalar sum of pt from Jets, Leptons and MET
-    ===============================================================
-  *//*
-    ===============================================================
-      Calculate the Scalar sum of pt from Jets, Leptons and MET
-    ===============================================================
-  *//*
-    ===============================================================
-      Calculate the Scalar sum of pt from Jets, Leptons and MET
-    ===============================================================
-  *//*
-    ===============================================================
-      Calculate the Scalar sum of pt from Jets, Leptons and MET
-    ===============================================================
-  *//*
-    ===============================================================
-      Calculate the Scalar sum of pt from Jets, Leptons and MET
-    ===============================================================
-  *//*
-    ===============================================================
-      Calculate the Scalar sum of pt from Jets, Leptons and MET
-    ===============================================================
-  *//*
-    ===============================================================
-      Calculate the Scalar sum of pt from Jets, Leptons and MET
-    ===============================================================
-  *//*
-    ===============================================================
-      Calculate the Scalar sum of pt from Jets, Leptons and MET
-    ===============================================================
-  *//*
-    ===============================================================
-      Calculate the Scalar sum of pt from Jets, Leptons and MET
-    ===============================================================
-  *//*
-    ===============================================================
-      Calculate the Scalar sum of pt from Jets, Leptons and MET
-    ===============================================================
-  *//*
-    ===============================================================
-      Calculate the Scalar sum of pt from Jets, Leptons and MET
-    ===============================================================
-  *//*
-    ===============================================================
-      Calculate the Scalar sum of pt from Jets, Leptons and MET
-    ===============================================================
-  *//*
-    ===============================================================
-      Calculate the Scalar sum of pt from Jets, Leptons and MET
-    ===============================================================
-  *//*
-    ===============================================================
-      Calculate the Scalar sum of pt from Jets, Leptons and MET
-    ===============================================================
-  *//*
-    ===============================================================
-      Calculate the Scalar sum of pt from Jets, Leptons and MET
-    ===============================================================
-  *//*
-    ===============================================================
-      Calculate the Scalar sum of pt from Jets, Leptons and MET
-    ===============================================================
-  *//*
-    ===============================================================
-      Calculate the Scalar sum of pt from Jets, Leptons and MET
-    ===============================================================
-  *//*
-    ===============================================================
-      Calculate the Scalar sum of pt from Jets, Leptons and MET
-    ===============================================================
-  *//*
-    ===============================================================
-      Calculate the Scalar sum of pt from Jets, Leptons and MET
-    ===============================================================
-  *//*
-    ===============================================================
-      Calculate the Scalar sum of pt from Jets, Leptons and MET
-    ===============================================================
-  *//*
-    ===============================================================
-      Calculate the Scalar sum of pt from Jets, Leptons and MET
-    ===============================================================
-  *//*
-    ===============================================================
-      Calculate the Scalar sum of pt from Jets, Leptons and MET
-    ===============================================================
-  *//*
-    ===============================================================
-      Calculate the Scalar sum of pt from Jets, Leptons and MET
-    ===============================================================
-  *//*
-    ===============================================================
-      Calculate the Scalar sum of pt from Jets, Leptons and MET
-    ===============================================================
-  *//*
-    ===============================================================
-      Calculate the Scalar sum of pt from Jets, Leptons and MET
-    ===============================================================
-  *//*
-    ===============================================================
-      Calculate the Scalar sum of pt from Jets, Leptons and MET
-    ===============================================================
-  *//*
-    ===============================================================
-      Calculate the Scalar sum of pt from Jets, Leptons and MET
-    ===============================================================
-  *//*
-    ===============================================================
-      Calculate the Scalar sum of pt from Jets, Leptons and MET
-    ===============================================================
-  *//*
-    ===============================================================
-      Calculate the Scalar sum of pt from Jets, Leptons and MET
-    ===============================================================
-  *//*
-    ===============================================================
-      Calculate the Scalar sum of pt from Jets, Leptons and MET
-    ===============================================================
-  *//*
-    ===============================================================
-      Calculate the Scalar sum of pt from Jets, Leptons and MET
-    ===============================================================
-  *//*
-    ===============================================================
-      Calculate the Scalar sum of pt from Jets, Leptons and MET
-    ===============================================================
-  *//*
-    ===============================================================
-      Calculate the Scalar sum of pt from Jets, Leptons and MET
-    ===============================================================
-  *//*
-    ===============================================================
-      Calculate the Scalar sum of pt from Jets, Leptons and MET
-    ===============================================================
-  *//*
-    ===============================================================
-      Calculate the Scalar sum of pt from Jets, Leptons and MET
-    ===============================================================
-  *//*
-    ===============================================================
-      Calculate the Scalar sum of pt from Jets, Leptons and MET
-    ===============================================================
-  *//*
-    ===============================================================
-      Calculate the Scalar sum of pt from Jets, Leptons and MET
-    ===============================================================
-  *//*
-    ===============================================================
-      Calculate the Scalar sum of pt from Jets, Leptons and MET
-    ===============================================================
-  *//*
-    ===============================================================
-      Calculate the Scalar sum of pt from Jets, Leptons and MET
-    ===============================================================
-  *//*
-    ===============================================================
-      Calculate the Scalar sum of pt from Jets, Leptons and MET
-    ===============================================================
-  *//*
-    ===============================================================
-      Calculate the Scalar sum of pt from Jets, Leptons and MET
-    ===============================================================
-  *//*
-    ===============================================================
-      Calculate the Scalar sum of pt from Jets, Leptons and MET
-    ===============================================================
-  *//*
-    ===============================================================
-      Calculate the Scalar sum of pt from Jets, Leptons and MET
-    ===============================================================
-  *//*
-    ===============================================================
-      Calculate the Scalar sum of pt from Jets, Leptons and MET
-    ===============================================================
-  *//*
-    ===============================================================
-      Calculate the Scalar sum of pt from Jets, Leptons and MET
-    ===============================================================
-  *//*
-    ===============================================================
-      Calculate the Scalar sum of pt from Jets, Leptons and MET
-    ===============================================================
-  *//*
-    ===============================================================
-      Calculate the Scalar sum of pt from Jets, Leptons and MET
-    ===============================================================
-  *//*
-    ===============================================================
-      Calculate the Scalar sum of pt from Jets, Leptons and MET
-    ===============================================================
-  *//*
-    ===============================================================
-      Calculate the Scalar sum of pt from Jets, Leptons and MET
-    ===============================================================
-  *//*
-    ===============================================================
-      Calculate the Scalar sum of pt from Jets, Leptons and MET
-    ===============================================================
-  *//*
-    ===============================================================
-      Calculate the Scalar sum of pt from Jets, Leptons and MET
-    ===============================================================
-  *//*
-    ===============================================================
-      Calculate the Scalar sum of pt from Jets, Leptons and MET
+      DeltaR between loBjet and loZCandidate
     ===============================================================
   */
+  // Function
+  auto deltaR_leading = [](
+      const std::vector<TLV>& tlv1,
+      const std::vector<TLV>& tlv2
+  ) {
+      float delEta = 0.;
+      float delPhi = 0.;
+      float delRSqrd = 0.;
+
+      float result = 0.;
+      delEta = tlv1.at(0).Eta() - tlv2.at(0).Eta();
+      delPhi = tlv1.at(0).Phi() - tlv2.at(0).Phi();
+      delRSqrd = pow(delEta,2) + pow(delPhi,2);
+      result = sqrt(delRSqrd);
+
+      return result;
+  };
+  // Variable - DeltaR
+  mainNode = MainFrame::systematicDefine(
+      mainNode,
+      "deltaR_Bjet0_ZCandidate0_NOSYS",
+      deltaR_leading,
+      {"sorted_bjet_TLV_NOSYS","sorted_ZCandidate_TLV_NOSYS"}
+  );
+  
+  /*
+    ===============================================================
+      DeltaPhi between Bjet0 and ZCandidate0
+    ===============================================================
+  */
+  // Variable - DeltaPhi
+  mainNode = MainFrame::systematicStringDefine(
+    mainNode,
+    "deltaPhi_Bjet0_ZCandidate0_NOSYS",
+    "static_cast<float>(std::abs(sorted_bjet_TLV_NOSYS.at(0).Phi() - sorted_ZCandidate_TLV_NOSYS.at(0).Phi()))"
+);
+  
+  /*
+    ===============================================================
+      DeltaPhi betweeen different leading Leptons and MET
+    ===============================================================
+  */
+  // Variable - Leptons and MET
+  mainNode = MainFrame::systematicStringDefine(
+      mainNode,
+      "deltaPhi_Lep0_MET_NOSYS",
+      "static_cast<float>(std::abs(lep0_phi_NOSYS - met_phi_NOSYS))"
+  );
+  mainNode = MainFrame::systematicStringDefine(
+      mainNode,
+      "deltaPhi_Lep1_MET_NOSYS",
+      "static_cast<float>(std::abs(lep1_phi_NOSYS - met_phi_NOSYS))"
+  );
+  mainNode = MainFrame::systematicStringDefine(
+      mainNode,
+      "deltaPhi_Lep2_MET_NOSYS",
+      "static_cast<float>(std::abs(lep2_phi_NOSYS - met_phi_NOSYS))"
+  );
+  mainNode = MainFrame::systematicStringDefine(
+      mainNode,
+      "deltaPhi_Lep3_MET_NOSYS",
+      "static_cast<float>(std::abs(lep3_phi_NOSYS - met_phi_NOSYS))"
+  );
 
 
   /* 

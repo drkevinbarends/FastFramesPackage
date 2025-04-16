@@ -33,49 +33,49 @@ general:
     mc20d: 44630.6
     mc20e: 58791.6
 
-# Embed ML model
-simple_onnx_inference:
-  - name: "NN"
-    model_paths: [
-      "/eos/user/k/kebarend/tWZ_analysis/outputs/NN_test.onnx"
-    ]
-    inputs:
-      "dense_input": [
-        "lo_lep_pt_NOSYS",
-        "lo_lep_eta_NOSYS",
-        "lo_lep_phi_NOSYS",
-        "nlo_lep_pt_NOSYS",
-        "nlo_lep_eta_NOSYS",
-        "nlo_lep_phi_NOSYS",
-        "nnlo_lep_pt_NOSYS",
-        "nnlo_lep_eta_NOSYS",
-        "nnlo_lep_phi_NOSYS",
-        "nnnlo_lep_pt_NOSYS",
-        "nnnlo_lep_eta_NOSYS",
-        "nnnlo_lep_phi_NOSYS",
-        "llll_mass_NOSYS",
-        "llll_pt_NOSYS",
-        "llll_eta_NOSYS",
-        "llll_phi_NOSYS",
-        "lo_bjet_pt_NOSYS",
-        "lo_bjet_eta_NOSYS",
-        "lo_bjet_phi_NOSYS",
-        "lo_zCandidate_pt_NOSYS",
-        "lo_zCandidate_mass_NOSYS",
-        "lo_zCandidate_phi_NOSYS",
-        "lo_zCandidate_eta_NOSYS",
-        "met_met_GeV_NOSYS",
-        "sumZCandidatePt_NOSYS",
-        "sumBjetPt_NOSYS",
-        "HT_NOSYS",
-        "LT_NOSYS",
-        "ST_NOSYS",
-        "SMT_NOSYS",
-        "nJets_NOSYS",
-        "nBjets_NOSYS"
-      ]
-    outputs:
-      "dense_2": ["NN_NOSYS"]
+# # Embed ML model
+# simple_onnx_inference:
+#   - name: "NN"
+#     model_paths: [
+#       "/eos/user/k/kebarend/tWZ_analysis/outputs/NN_test.onnx"
+#     ]
+#     inputs:
+#       "dense_input": [
+#         "lep0_pt_NOSYS",
+#         "lep0_eta_NOSYS",
+#         "lep0_phi_NOSYS",
+#         "lep1_pt_NOSYS",
+#         "lep1_eta_NOSYS",
+#         "lep1_phi_NOSYS",
+#         "lep2_pt_NOSYS",
+#         "lep2_eta_NOSYS",
+#         "lep2_phi_NOSYS",
+#         "lep3_pt_NOSYS",
+#         "lep3_eta_NOSYS",
+#         "lep3_phi_NOSYS",
+#         "llll_mass_NOSYS",
+#         "llll_pt_NOSYS",
+#         "llll_eta_NOSYS",
+#         "llll_phi_NOSYS",
+#         "bjet0_pt_NOSYS",
+#         "bjet0_eta_NOSYS",
+#         "bjet0_phi_NOSYS",
+#         "ZCandidate0_pt_NOSYS",
+#         "ZCandidate0_mass_NOSYS",
+#         "ZCandidate0_phi_NOSYS",
+#         "ZCandidate0_eta_NOSYS",
+#         "met_met_GeV_NOSYS",
+#         "sumZCandidatePt_NOSYS",
+#         "sumBjetPt_NOSYS",
+#         "HT_NOSYS",
+#         "LT_NOSYS",
+#         "ST_NOSYS",
+#         "SMT_NOSYS",
+#         "nJets_NOSYS",
+#         "nBjets_NOSYS"
+#       ]
+#     outputs:
+#       "dense_2": ["NN_NOSYS"]
 
 
 # define regions
@@ -84,10 +84,10 @@ regions:
     selection: >
       (pass_eeee_NOSYS || pass_eeemu_NOSYS || pass_eemumu_NOSYS || pass_emumumu_NOSYS || pass_mumumumu_NOSYS)
       && nLeptons_tight_NOSYS == 4
-      && lo_lep_TLV_NOSYS.Pt() > 28
-      && nlo_lep_TLV_NOSYS.Pt() > 18
-      && nnlo_lep_TLV_NOSYS.Pt() > 10
-      && nnnlo_lep_TLV_NOSYS.Pt() > 10
+      && lep0_TLV_NOSYS.Pt() > 28
+      && lep1_TLV_NOSYS.Pt() > 18
+      && lep2_TLV_NOSYS.Pt() > 10
+      && lep3_TLV_NOSYS.Pt() > 10
       && sumOfLeptonCharges_NOSYS == 0
       && massOSSFFlag_NOSYS == 1.
       && nZCandidates_NOSYS == 1.
@@ -99,10 +99,10 @@ regions:
     selection: >
       (pass_eeee_NOSYS || pass_eeemu_NOSYS || pass_eemumu_NOSYS || pass_emumumu_NOSYS || pass_mumumumu_NOSYS)
       && nLeptons_tight_NOSYS == 4
-      && lo_lep_TLV_NOSYS.Pt() > 28
-      && nlo_lep_TLV_NOSYS.Pt() > 18
-      && nnlo_lep_TLV_NOSYS.Pt() > 10
-      && nnnlo_lep_TLV_NOSYS.Pt() > 10
+      && lep0_TLV_NOSYS.Pt() > 28
+      && lep1_TLV_NOSYS.Pt() > 18
+      && lep2_TLV_NOSYS.Pt() > 10
+      && lep3_TLV_NOSYS.Pt() > 10
       && sumOfLeptonCharges_NOSYS == 0
       && massOSSFFlag_NOSYS == 1.
       && nZCandidates_NOSYS == 1.
@@ -115,10 +115,10 @@ regions:
       (pass_eeee_NOSYS || pass_eeemu_NOSYS || pass_eemumu_NOSYS || pass_emumumu_NOSYS || pass_mumumumu_NOSYS)
       && nLeptons_NOSYS == 4
       && nLeptons_tight_NOSYS == 3
-      && lo_lep_TLV_NOSYS.Pt() > 28
-      && nlo_lep_TLV_NOSYS.Pt() > 18
-      && nnlo_lep_TLV_NOSYS.Pt() > 10
-      && nnnlo_lep_TLV_NOSYS.Pt() > 10
+      && lep0_TLV_NOSYS.Pt() > 28
+      && lep1_TLV_NOSYS.Pt() > 18
+      && lep2_TLV_NOSYS.Pt() > 10
+      && lep3_TLV_NOSYS.Pt() > 10
       && sumOfLeptonCharges_NOSYS == 0
       && massOSSFFlag_NOSYS == 1.
       && nZCandidates_NOSYS == 1.
@@ -129,10 +129,10 @@ regions:
     selection: >
       (pass_eeee_NOSYS || pass_eeemu_NOSYS || pass_eemumu_NOSYS || pass_emumumu_NOSYS || pass_mumumumu_NOSYS)
       && nLeptons_tight_NOSYS == 4
-      && lo_lep_TLV_NOSYS.Pt() > 28
-      && nlo_lep_TLV_NOSYS.Pt() > 18
-      && nnlo_lep_TLV_NOSYS.Pt() > 10
-      && nnnlo_lep_TLV_NOSYS.Pt() > 10
+      && lep0_TLV_NOSYS.Pt() > 28
+      && lep1_TLV_NOSYS.Pt() > 18
+      && lep2_TLV_NOSYS.Pt() > 10
+      && lep3_TLV_NOSYS.Pt() > 10
       && sumOfLeptonCharges_NOSYS == 0
       && massOSSFFlag_NOSYS == 1.
       && nZCandidates_NOSYS == 1.
@@ -143,10 +143,10 @@ regions:
     selection: >
       (pass_eeee_NOSYS || pass_eeemu_NOSYS || pass_eemumu_NOSYS || pass_emumumu_NOSYS || pass_mumumumu_NOSYS)
       && nLeptons_tight_NOSYS == 4
-      && lo_lep_TLV_NOSYS.Pt() > 28
-      && nlo_lep_TLV_NOSYS.Pt() > 18
-      && nnlo_lep_TLV_NOSYS.Pt() > 10
-      && nnnlo_lep_TLV_NOSYS.Pt() > 10
+      && lep0_TLV_NOSYS.Pt() > 28
+      && lep1_TLV_NOSYS.Pt() > 18
+      && lep2_TLV_NOSYS.Pt() > 10
+      && lep3_TLV_NOSYS.Pt() > 10
       && sumOfLeptonCharges_NOSYS == 0
       && massOSSFFlag_NOSYS == 1.
       && nZCandidates_NOSYS == 2.
@@ -169,7 +169,7 @@ samples:
     simulation_type: "fullsim"
   - name: "WZ_Sherpa"
     dsids: [364253, 364284, 364289]
-    campaigns: ["mc20d", "mc20e", "mc20a"]
+    campaigns: ["mc20a", "mc20d", "mc20e"]
     simulation_type: "fullsim"
 
 ntuples:

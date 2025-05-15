@@ -7,8 +7,8 @@ export ASETUP_PRINTLEVEL="0"
 export BINARY_TAG="x86_64-el9-gcc13-opt"
 export CMTCONFIG="x86_64-el9-gcc13-opt"
 if [ -z "${AtlasSetup:+x}" ]; then
-    export AtlasSetup="/cvmfs/atlas.cern.ch/repo/ATLASLocalRootBase/x86_64/AtlasSetup/V03-01-14/AtlasSetup"
-    export AtlasSetupVersion="AtlasSetup-03-01-14"
+    export AtlasSetup="/cvmfs/atlas.cern.ch/repo/ATLASLocalRootBase/x86_64/AtlasSetup/V03-01-15/AtlasSetup"
+    export AtlasSetupVersion="AtlasSetup-03-01-15"
 fi
 
 if [ -d /tmp/kebarend ]; then

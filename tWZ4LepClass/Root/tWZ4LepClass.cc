@@ -1605,6 +1605,38 @@ ROOT::RDF::RNode tWZ4LepClass::defineVariables(
 
   /* 
   ======================================================
+    Event truth flavour
+  ======================================================
+  */
+  // Function
+  auto eventTruthFlavour = [](
+    const std::vector<int>& truthFlavour
+  ){
+    const int size = truthFlavour.size();
+
+    int result = 0;
+    for (int i=0; i<size; i++) {
+      if (truthFlavour.at(i) == 5) { result = 5; break; }
+    }
+    if (result == 5) { return result; }
+
+    for (int i=0; i<size; i++){ 
+      if (truthFlavour.at(i) == 4) { result = 4; break; }
+    }
+
+    return result;
+  };
+  // Variable
+  mainNode = MainFrame::systematicDefine(
+    mainNode,
+    "eventTruthFlavour_NOSYS",
+    eventTruthFlavour,
+    {"jet_TruthFlavour"}
+  );
+
+
+  /* 
+  ======================================================
     Analysis Variables
   ======================================================
   */
